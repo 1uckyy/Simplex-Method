@@ -1,0 +1,13 @@
+﻿<Window x:Class="simplex_method.AutoModeArtificialBasis"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:simplex_method"
+        mc:Ignorable="d"
+        Title="Метод искусственного базиса. Автоматический режим." Height="468" Width="651" Background="White" Icon="Blackboard Chalk.ico">
+    <Grid Name="MainGrid">
+        <Label x:Name="labelanswer" Content="Ответ:" HorizontalAlignment="Left" Margin="22,25,0,0" VerticalAlignment="Top" FontSize="20" Visibility="Visible"/>
+        <Button x:Name="buttonToMainWindow" Content="На главную" HorizontalAlignment="Left" Margin="479,386,0,0" VerticalAlignment="Top" Width="75" Visibility="Visible" Click="buttonToMainWindow_Click"/>
+    </Grid>
+</Window>

@@ -1,0 +1,38 @@
+﻿<Window x:Class="simplex_method.HelpWindow1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:simplex_method"
+        mc:Ignorable="d"
+        Title="Помощь. Открытие файла." Height="469.65" Width="473.334" Icon="help.ico">
+    <Grid>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" FontSize="15" Height="326" Width="427">
+        Для открытия нужного файла необходимо:
+            <LineBreak/>
+            1) Выбрать диск (нажать на нужный в списке. например: "C:\");
+            <LineBreak/>
+            2) Выбрать директорию с нужным файлом (нажать на папку в списке, после этого откроется список папок, которые есть внутри выбранной, далее вновь выбрать нужную и так далее до нужной);
+            <LineBreak/>
+            3) Выбрав нужную директорию с расположением нужного файла, нажмите на кнопку "Показать файлы .txt". Тем самым будет показан список файлов формата ".txt" выбранной директории. Если в папке нет файлов формата .txt, то будет отображена запись "Нет файлов формата .txt".
+            <LineBreak/>
+            4) Выберите нужный файл в списке.
+            <LineBreak/>
+            5) Выбрав файл в списке, обратите внимание на главное окно приложения: параметры задачи из файла были отображены в главном окне.
+        </TextBlock>
+        <Button x:Name="buttonBac" Content="" HorizontalAlignment="Left" Margin="11,346,0,0" VerticalAlignment="Top" Width="27" BorderBrush="{x:Null}" Height="24" Cursor="Hand">
+            <Button.Background>
+                <ImageBrush ImageSource="arrowleft.png"/>
+            </Button.Background>
+        </Button>
+        <Label x:Name="label" Content="- кнопка возврата назад по директориям." HorizontalAlignment="Left" Margin="43,344,0,0" VerticalAlignment="Top"/>
+        <Menu x:Name="menu" Height="30" VerticalAlignment="Top" Margin="11,386,316,0">
+            <MenuItem Name="ChooseDisc" Header="Выбрать диск" Width="132" HorizontalContentAlignment="Stretch" FontSize="14" Height="30">
+                <MenuItem.Icon>
+                    <Image Source="disc.ico" Margin="-3,-4,-4,-3"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <Label x:Name="label1" Content="- кнопка отображения списка дисков" HorizontalAlignment="Left" Margin="156,387,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

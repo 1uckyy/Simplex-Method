@@ -1,0 +1,151 @@
+﻿<Window x:Class="simplex_method.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:simplex_method"
+        mc:Ignorable="d"
+        Title="Задача линейного программирования" Height="441.15" Width="968.278" Background="White" Icon="Blackboard Chalk.ico" Closed="Window_Closed">
+    <Grid Name="startgrid" RenderTransformOrigin="0,0">
+        <ScrollViewer Name="scroll_entergrid" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="338,113,0,66" HorizontalAlignment="Left" Width="570">
+            <Grid x:Name="entergrid" HorizontalAlignment="Left" Height="223" VerticalAlignment="Top" Width="481" ShowGridLines="False" RenderTransformOrigin="0.5,0.5" Loaded="entergrid_Loaded">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </ScrollViewer>
+        <ComboBox x:Name="method" Margin="37,81,0,0" SelectionChanged="comboBox_SelectionChanged" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200">
+            <ComboBoxItem Name="simplex" Content="Симплекс-метод" Height="Auto" Width="Auto" IsSelected="True"/>
+            <ComboBoxItem Name="artificialbasismethod" Content="Метод искусственного базиса" Height="Auto" Width="Auto"/>
+        </ComboBox>
+        <Button x:Name="button" Content="Решить" Margin="0,0,53,27" Click="button_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="87"/>
+        <Label x:Name="label" Content="Метод решения:" HorizontalAlignment="Left" Margin="37,51,0,0" VerticalAlignment="Top"/>
+        <ScrollViewer Name="Scrollbasix" HorizontalScrollBarVisibility="Auto" Margin="37,129,0,225" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Width="261">
+            <Grid Name="basix_variables" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="176" Loaded="basix_variables_Loaded" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+            </Grid>
+        </ScrollViewer>
+        <ScrollViewer Name="Scrolltargetfunction" HorizontalScrollBarVisibility="Auto" Margin="338,51,0,302" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" Width="570">
+            <Grid Name="targetfunction" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="481" Margin="0,5,0,0" Loaded="targetfunction_Loaded">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+            </Grid>
+        </ScrollViewer>
+        <ScrollViewer Name="scrollgaussgrid" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="37,115,53,91" Visibility="Hidden">
+            <Grid  Name="gaussgrid" HorizontalAlignment="Left" Height="223" VerticalAlignment="Top" Width="481" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </ScrollViewer>
+        <CheckBox x:Name="checkBoxCornerDot" Content="Задать начальную угловую точку" HorizontalAlignment="Left" Margin="37,109,0,0" VerticalAlignment="Top" IsChecked="True" Checked="checkBoxCornerDot_Checked_1" Unchecked="checkBoxCornerDot_Unchecked"/>
+        <!--<ListBox x:Name="listBoxFiles" Height="195" Margin="24,442,15,0" VerticalAlignment="Top"/>-->
+        <!--<Label x:Name="labelNowDirectory" Content="Файлы директории:" HorizontalAlignment="Left" Margin="24,411,0,0" VerticalAlignment="Top"/>-->
+        <!--<Label x:Name="labelFileNow" Content="Последний файл:" Margin="37,0,0,27" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="108"/>-->
+        <Menu x:Name="menu" Height="36" VerticalAlignment="Top">
+            <MenuItem FontSize="16" Header="Файл" HorizontalAlignment="Center" Width="72" Height="36">
+                <MenuItem.Icon>
+                    <Image x:Name="ImageShowFiles" Source="file.ico" Margin="-3,-4,-4,-2"/>
+                </MenuItem.Icon>
+                <MenuItem Name="OpenFile" Header="Открыть файл" Click="OpenFile_Click"/>
+                <MenuItem Name="SaveFile" Header="Сохранить в файл" Click="SaveFile_Click"/>
+            </MenuItem>
+            <Grid Height="26" Width="204">
+                <ComboBox x:Name="dimension2" HorizontalAlignment="Left" Margin="149,2,0,0" VerticalAlignment="Top" Width="44" MaxDropDownHeight="100" SelectionChanged="dimension2_SelectionChanged" SelectedIndex="2">
+                    <ComboBoxItem Content="1" Height="20" Width="36"/>
+                    <ComboBoxItem Content="2" Height="20" Width="36"/>
+                    <ComboBoxItem Content="3" Height="20" Width="36" IsSelected="True"/>
+                    <ComboBoxItem Content="4" Height="20" Width="36"/>
+                    <ComboBoxItem Content="5" Height="20" Width="36"/>
+                    <ComboBoxItem Content="6" Height="20" Width="36"/>
+                    <ComboBoxItem Content="7" Height="20" Width="36"/>
+                    <ComboBoxItem Content="8" Height="20" Width="36"/>
+                    <ComboBoxItem Content="9" Height="20" Width="36"/>
+                    <ComboBoxItem Content="10" Height="20" Width="36"/>
+                    <ComboBoxItem Content="11" Height="20" Width="36"/>
+                    <ComboBoxItem Content="12" Height="20" Width="36"/>
+                    <ComboBoxItem Content="13" Height="20" Width="36"/>
+                    <ComboBoxItem Content="14" Height="20" Width="36"/>
+                    <ComboBoxItem Content="15" Height="20" Width="36"/>
+                    <ComboBoxItem Content="16" Height="20" Width="36"/>
+                </ComboBox>
+                <Label x:Name="columns" Content="Количество переменных:" VerticalAlignment="Top" HorizontalAlignment="Left" Width="149"/>
+            </Grid>
+            <Grid Height="26" Width="214">
+                <ComboBox x:Name="dimension1" HorizontalAlignment="Left" Margin="160,2,0,0" VerticalAlignment="Top" Width="44" MaxDropDownHeight="100" SelectionChanged="dimension1_SelectionChanged" Text="3">
+                    <ComboBoxItem Content="1" Height="20" Width="36"/>
+                    <ComboBoxItem Content="2" Height="20" Width="36"/>
+                    <ComboBoxItem Content="3" Height="20" Width="36" IsSelected="True"/>
+                    <ComboBoxItem Content="4" Height="20" Width="36"/>
+                    <ComboBoxItem Content="5" Height="20" Width="36"/>
+                    <ComboBoxItem Content="6" Height="20" Width="36"/>
+                    <ComboBoxItem Content="7" Height="20" Width="36"/>
+                    <ComboBoxItem Content="8" Height="20" Width="36"/>
+                    <ComboBoxItem Content="9" Height="20" Width="36"/>
+                    <ComboBoxItem Content="10" Height="20" Width="36"/>
+                    <ComboBoxItem Content="11" Height="20" Width="36"/>
+                    <ComboBoxItem Content="12" Height="20" Width="36"/>
+                    <ComboBoxItem Content="13" Height="20" Width="36"/>
+                    <ComboBoxItem Content="14" Height="20" Width="36"/>
+                    <ComboBoxItem Content="15" Height="20" Width="36"/>
+                    <ComboBoxItem Content="16" Height="20" Width="36"/>
+                </ComboBox>
+                <Label Content="Количество ограничений:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,0,0,0"/>
+            </Grid>
+            <ComboBox x:Name="comboBoxMinMax" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="59" SelectedIndex="0" SelectionChanged="comboBoxMinMax_SelectionChanged" Height="34" FontSize="16">
+                <ComboBoxItem Content="min"/>
+                <ComboBoxItem Content="max"/>
+            </ComboBox>
+            <RadioButton x:Name="stepbystepmode" Content="Пошаговый режим" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="True"/>
+            <RadioButton x:Name="automode" Content="Автоматический режим" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <MenuItem Name="Help" FontSize="16" Header="" Click="Help_Click" Width="25">
+                <MenuItem.Icon>
+                    <Image Source="help.ico" Margin="-3,-4,-4,-2"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="Info" FontSize="16" Header="" Click="Info_Click" Width="25">
+                <MenuItem.Icon>
+                    <Image Source="info.ico" Margin="-3,-4,-4,-2"/>
+                </MenuItem.Icon>
+            </MenuItem>
+
+        </Menu>
+        <Label x:Name="labelLastFile" Content="" HorizontalAlignment="Left" Margin="37,0,0,27" VerticalAlignment="Bottom"/>
+        <!--<TextBox x:Name="textBox" Margin="174,322,155,0" TextWrapping="Wrap" Text="TextBox" Height="23" VerticalAlignment="Top"/>-->
+        <!--<Label x:Name="labelNowDrectory" Content="Текущая директория: " HorizontalAlignment="Left" Margin="211,354,0,0" VerticalAlignment="Top"/>-->
+    </Grid>
+</Window>

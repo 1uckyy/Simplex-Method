@@ -1,0 +1,29 @@
+﻿<Window x:Class="simplex_method.InformationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:simplex_method"
+        mc:Ignorable="d"
+        Title="Справка" Height="316.173" Width="300" Icon="info.ico">
+    <Grid>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,24,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="69" Width="272">
+        Данная программа предназначена для решения задачи линейного программирования при помощи симплекс-метода и метода искусственного базиса.
+        </TextBlock>
+        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="10,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="117" Width="197">
+        Автор программы:
+            <LineBreak />
+            студент ЯрГУ им. П.Г.Демидова
+            <LineBreak />
+            факультета ИВТ
+            <LineBreak />
+            группы ИТ-31
+            <LineBreak />
+            Новак Владислав Андреевич
+            <LineBreak />
+            <LineBreak />
+            Язык реализации программы: C#
+        </TextBlock>
+
+    </Grid>
+</Window>

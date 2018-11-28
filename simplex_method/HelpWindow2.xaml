@@ -1,0 +1,36 @@
+﻿<Window x:Class="simplex_method.HelpWindow2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:simplex_method"
+        mc:Ignorable="d"
+        Title="Помощь. Сохранение файла." Height="358.539" Width="473.334" Icon="help.ico">
+    <Grid>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" FontSize="15" Height="210" Width="427">
+        Для открытия нужного файла необходимо:
+            <LineBreak/>
+            1) Выбрать диск (нажать на нужный в списке. например: "C:\");
+            <LineBreak/>
+            2) Выбрать директорию с нужным файлом (нажать на папку в списке, после этого откроется список папок, которые есть внутри выбранной, далее вновь выбрать нужную и так далее до нужной);
+            <LineBreak/>
+            3) Выбрав нужную директорию для сохранения файла, введите название файла в поле "Имя файла:".
+            <LineBreak/>
+            4) Введя имя файла, нажмите на кнопку "Сохранить".
+        </TextBlock>
+        <Button x:Name="buttonBac" Content="" HorizontalAlignment="Left" Margin="12,227,0,0" VerticalAlignment="Top" Width="27" BorderBrush="{x:Null}" Height="24" Cursor="Hand">
+            <Button.Background>
+                <ImageBrush ImageSource="arrowleft.png"/>
+            </Button.Background>
+        </Button>
+        <Label x:Name="label" Content="- кнопка возврата назад по директориям." HorizontalAlignment="Left" Margin="44,225,0,0" VerticalAlignment="Top"/>
+        <Menu x:Name="menu" Height="30" VerticalAlignment="Top" Margin="12,267,315,0">
+            <MenuItem Name="ChooseDisc" Header="Выбрать диск" Width="132" HorizontalContentAlignment="Stretch" FontSize="14" Height="30">
+                <MenuItem.Icon>
+                    <Image Source="disc.ico" Margin="-3,-4,-4,-3"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <Label x:Name="label1" Content="- кнопка отображения списка дисков" HorizontalAlignment="Left" Margin="157,268,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

@@ -1,0 +1,45 @@
+﻿<Window x:Class="simplex_method.ChooseDirectory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:simplex_method"
+        mc:Ignorable="d"
+        Title="Выберите директорию" Height="358.414" Width="614.144">
+    <Grid>
+        <ListBox x:Name="listBoxDirectories" Margin="157,49,133,45" SelectionChanged="listBoxDirectories_SelectionChanged"/>
+
+        <!--<Button x:Name="buttonChooseDisk" Content="Выбрать диск" Margin="22,0,0,22" Click="buttonChooseDisk_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="108"/>
+        <Button x:Name="buttonOk" Content="Показать файлы" Margin="0,0,10,17" Click="buttonOk_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="119"/>-->
+        <Button x:Name="buttonBac" Content="" HorizontalAlignment="Left" Margin="131,48,0,0" VerticalAlignment="Top" Width="27" Click="buttonBac_Click" BorderBrush="{x:Null}" Height="24" Cursor="Hand">
+            <Button.Background>
+                <ImageBrush ImageSource="arrowleft.png"/>
+            </Button.Background>
+        </Button>
+        <ListBox x:Name="listBoxFiles" Margin="158,36,132,58" Visibility="Hidden" SelectionChanged="listBoxFiles_SelectionChanged"/>
+        <Menu x:Name="menu" Height="30" VerticalAlignment="Top">
+            <MenuItem Name="ChooseDisc" Header="Выбрать диск" Width="132" HorizontalContentAlignment="Stretch" FontSize="14" Height="30" Click="ChooseDisc_Click">
+                <MenuItem.Icon>
+                    <Image Source="disc.ico" Margin="-3,-4,-4,-3"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="ShowFiles" Header="Показать файлы .txt" HorizontalContentAlignment="Stretch" FontSize="14" Click="ShowFiles_Click">
+                <MenuItem.Icon>
+                    <Image Name="ImageShowFiles" Source="files.ico" Margin="-3,-4,-4,-3"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="help" FontSize="14" Header="Помощь" Click="MenuItem_Click">
+                <MenuItem.Icon>
+                    <Image Name="Help" Source="help.ico" Margin="-3,-4,-4,-3"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Name="Exit" Header="Выход" HorizontalContentAlignment="Stretch" FontSize="14" Click="Exit_Click">
+                <MenuItem.Icon>
+                    <Image Source="close.ico" Margin="-3,-4,-4,-3"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <Label x:Name="labelFileName" Content="Имя файла:" HorizontalAlignment="Left" Margin="114,0,0,7" VerticalAlignment="Bottom" Visibility="Hidden"/>
+        <TextBox x:Name="textBoxFileName" Height="23" Margin="192,0,82,7" TextWrapping="Wrap" Text="*.txt" VerticalAlignment="Bottom" Visibility="Hidden"/>
+    </Grid>
+</Window>
