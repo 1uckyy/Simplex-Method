@@ -153,7 +153,6 @@ namespace simplex_method
                 //Смена местами визуализаций переменных(после выбора опорного элемента) + буферизация.
                 simplextable.ChangeOfVisualizationVariables();
                 //буферизация данных
-                //simplextable.BufferingSimplexTableValues(step + 3);
                 simplextable.BufferingSimplexTableValuesTest();
                 //удаляем кнопки
                 simplextable.DeleteButtons();
@@ -172,6 +171,7 @@ namespace simplex_method
                     case true:
                         variable_visualization = simplextable.ReturnVariableVisualization();
                         elements = simplextable.ReturnElements();
+                        elements.RemoveAt(elements.Count - 1);
 
                         //организация массива для симплекс-метода
                         List<List<double>> temp_elements = new List<List<double>>();
@@ -208,9 +208,10 @@ namespace simplex_method
                         else
                         {
                             simplextable1.DeleteButtons();
-                            simplextable.HideSimplexTable();
-                            simplextable1.VisibleSimplexTable();
                             MainGrid.Children.Add(simplextable1);
+                            simplextable1.SetVariableVisualization(simplextable.ReturnVariableVisualization());
+                            simplextable1.SetElements(elements);
+                            simplextable1.UpdateValuesNewStage();
                         }
                         //проверка решения
                         switch (simplextable1.ResponseCheck())
@@ -227,7 +228,7 @@ namespace simplex_method
                                 if (corner_dot_was_added == false)
                                 {
                                     //добавляем точку
-                                    corner_dot = simplextable.ResponseCornerDot(step);
+                                    corner_dot = simplextable1.ResponseCornerDot(0);
                                     MainGrid.Children.Add(corner_dot);
                                     corner_dot_was_added = true;
                                 }
@@ -290,9 +291,8 @@ namespace simplex_method
                 simplextable.DeleteButtons();
                 //возвращение данных из буфера
                 simplextable.GetOutOfTheBufferSimplexTest();
+                //возвращение данных о визуализации из буфера
                 simplextable.GetOutOfTheBufferVisualizationVariablesTest();
-                //simplextable.GetOutOfTheBufferSimplex(step + 3);
-                //simplextable.GetOutOfTheBufferVisualizationVariables(step + 3);
                 //обновление данных сиплекс-таблицы
                 simplextable.UpdateSimplexTableValues();
                 if (memory == false)
@@ -332,7 +332,7 @@ namespace simplex_method
                 labelsteps.Content = "Шаг " + step + ": Симплекс-таблица. Выбор опорного элемента.";
                 corner_dot.Visibility = Visibility.Hidden;
                 buttonToMainWindow.Visibility = Visibility.Hidden;
-                buttonNext1.Visibility = Visibility.Visible;
+                buttonNext1.Visibility = Visibility.Hidden;
                 simplextable.CornerPoint(step - 1);
             }
         }
@@ -346,7 +346,6 @@ namespace simplex_method
                 //Смена местами визуализаций переменных(после выбора опорного элемента) + буферизация.
                 simplextable1.ChangeOfVisualizationVariables();
                 //буферизация данных
-                //simplextable1.BufferingSimplexTableValues(step_1 + 3);
                 simplextable1.BufferingSimplexTableValuesTest();
                 //удаляем кнопки
                 simplextable1.DeleteButtons();
@@ -370,7 +369,7 @@ namespace simplex_method
                         if (corner_dot_was_added == false)
                         {
                             //добавляем точку
-                            corner_dot = simplextable.ResponseCornerDot(step);
+                            corner_dot = simplextable1.ResponseCornerDot(step_1);
                             MainGrid.Children.Add(corner_dot);
                             corner_dot_was_added = true;
                         }
@@ -401,15 +400,14 @@ namespace simplex_method
                 simplextable1.DeleteButtons();
                 //возвращение данных из буфера
                 simplextable1.GetOutOfTheBufferSimplexTest();
-                //simplextable.GetOutOfTheBufferSimplex(step_1 + step);
-                //simplextable.GetOutOfTheBufferVisualizationVariables(step_1 + step);
+                //возвращение данных о визуализации из буфера
                 simplextable1.GetOutOfTheBufferVisualizationVariablesTest();
                 //обновление данных сиплекс-таблицы
                 simplextable1.UpdateSimplexTableValues();
                 //выбор опорного
                 simplextable1.SelectionOfTheSupportElement();
-                step_1--;
                 labelsteps.Content = "Шаг " + step_1 + ": Симплекс-таблица. Выбор опорного элемента.";
+                step_1--;
                 corner_dot.Visibility = Visibility.Hidden;
                 buttonToMainWindow.Visibility = Visibility.Hidden;
                 buttonNext1.Visibility = Visibility.Visible;
@@ -417,7 +415,6 @@ namespace simplex_method
             }
             else
             {
-                simplextable1.HideSimplexTable();
                 MainGrid.Children.Remove(simplextable1);
                 simplextable.VisibleSimplexTable();
                 memory = true;
@@ -427,6 +424,8 @@ namespace simplex_method
                 buttonNext1.Visibility = Visibility.Hidden;
                 buttonBack.Visibility = Visibility.Visible;
                 buttonNext.Visibility = Visibility.Visible;
+                //вызываем ещё раз назад
+                buttonBack_Click(new object(), new RoutedEventArgs());
             }
         }
     }

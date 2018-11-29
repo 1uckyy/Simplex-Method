@@ -51,7 +51,10 @@ namespace simplex_method
         /// Ищем минимум или максимум(0-минимум,1-максимум).
         /// </summary>
         int MinMax;
-
+        /// <summary>
+        /// Угловая точка соответствующая решению.
+        /// </summary>
+        Grid corner_dot = new Grid();
         public AutoModeArtificialBasis(List<List<double>> elements, int number_of_basix, int[] variable_visualization, double[] target_function_elements, int MinMax)
         {
             InitializeComponent();
@@ -112,6 +115,7 @@ namespace simplex_method
     
             variable_visualization = simplextable.ReturnVariableVisualization();
             elements = simplextable.ReturnElements();
+            elements.RemoveAt(elements.Count - 1);
 
             //организация массива для симплекс-метода
             List<List<double>> temp_elements = new List<List<double>>();
@@ -136,24 +140,7 @@ namespace simplex_method
             simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, elements, target_function_elements, true);
             MainGrid.Children.Add(simplextable1);
 
-            ////проверка решения
-            //switch (simplextable1.ResponseCheck())
-            //{
-            //    case 0:
-            //        //выбор опорного
-            //        simplextable1.SelectionRandomSupportElement();
-            //        break;
-            //    case 1:
-            //        if (MinMax == 0)
-            //            labelanswer.Content = "Ответ :" + simplextable1.Response() * (-1);
-            //        else labelanswer.Content = "Ответ :" + simplextable1.Response();
-            //        buttonToMainWindow.Visibility = Visibility.Visible;
-            //        break;
-            //    case -1:
-            //        labelanswer.Content = "Задача не разрешима!";
-            //        buttonToMainWindow.Visibility = Visibility.Visible;
-            //        break;
-            //}
+            step = 0;
 
             while(simplextable1.ResponseCheck()!=1 && simplextable1.ResponseCheck() != -1)
             {
@@ -172,6 +159,9 @@ namespace simplex_method
                 if (MinMax == 0)
                     labelanswer.Content = "Ответ :" + simplextable1.Response() * (-1);
                 else labelanswer.Content = "Ответ :" + simplextable1.Response();
+                //добавляем точку
+                corner_dot = simplextable1.ResponseCornerDot(step);
+                MainGrid.Children.Add(corner_dot);
                 buttonToMainWindow.Visibility = Visibility.Visible;
             }
             else
@@ -179,6 +169,8 @@ namespace simplex_method
                 labelanswer.Content = "Задача не разрешима!";
                 buttonToMainWindow.Visibility = Visibility.Visible;
             }
+
+            step++;
         }
 
         private void buttonToMainWindow_Click(object sender, RoutedEventArgs e)

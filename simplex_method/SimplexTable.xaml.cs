@@ -382,8 +382,6 @@ namespace simplex_method
                     simplextablegrid.Children.Add(myLine);
                 }
             }
-
-
         }
 
         /// <summary>
@@ -687,6 +685,83 @@ namespace simplex_method
                     Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
                     lbl.Content = Math.Round(simplex_elements[i - 1][j - 1], 2);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Изменение данных при переходе к основной части. (нужен в методе искусственного базиса) + изменение визуализации переменных.
+        /// </summary>
+        public void UpdateValuesNewStage()
+        {
+            //заполняем основное поле
+            for (int i = 1; i < simplextablegrid.RowDefinitions.Count - 1; i++)
+            {
+                for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
+                {
+                    //находим label
+                    Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
+                    lbl.Content = Math.Round(elements[i - 1][(number_of_permutations - 1) + j], 2);
+                }
+            }
+
+            //коэффициенты последней строки
+            double a;
+            //счёт столбца
+            int column_index = 1;
+            for (int j = number_of_permutations; j < elements[0].Count - 1; j++)
+            {
+                //логика
+                a = 0;
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    a += elements[i][j] * (-1) * target_function_elements[variable_visualization[i] - 1];
+                }
+                a += target_function_elements[variable_visualization[j] - 1];
+
+                //находим label
+                Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + (simplextablegrid.RowDefinitions.Count - 1) + "_" + column_index);
+                lbl.Content = Math.Round(a, 2);
+                column_index++;
+            }
+
+
+            //коэффициент в нижнем правом углу симплекс таблицы
+            a = 0;
+            for (int i = 0; i < elements.Count; i++)
+                a += elements[i][elements[0].Count - 1] * target_function_elements[variable_visualization[i] - 1];
+            //находим label
+            Label variable2 = (Label)simplextablegrid.FindName("simplexlabel" + (simplextablegrid.RowDefinitions.Count - 1) + "_" + (simplextablegrid.ColumnDefinitions.Count - 1));
+            variable2.Content = Math.Round(a, 2) * (-1);
+
+            simplex_elements = new List<List<double>>();
+
+            //заполняем рабочий массив
+            for (int i = 1; i < simplextablegrid.RowDefinitions.Count; i++)
+            {
+                simplex_elements.Add(new List<double>());
+                for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
+                {
+                    //находим label
+                    Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
+                    //добавляем в массив число
+                    simplex_elements[i - 1].Add(double.Parse(lbl.Content.ToString()));
+                }
+            }
+
+
+            //изменение визуализации переменных
+            //изменяем лейблы с визуализацией СВОБОДНЫХ переменных(по типу x1, x2, x3 и т.д.)
+            for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count - 1; j++)
+            {
+                Label lbl = (Label)simplextablegrid.FindName("simplexlabel0_" + j);
+                lbl.Content = "x" + variable_visualization[(number_of_permutations - 1) + j];
+            }
+
+            //изменяем лейблы с визуализацией БАЗИСНЫХ переменных(по типу x1, x2, x3 и т.д.)
+            for (int i = 1; i < simplextablegrid.RowDefinitions.Count - 1; i++)
+            {
+                Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_0");
+                lbl.Content = "x" + variable_visualization[i - 1];
             }
         }
 
@@ -1109,7 +1184,7 @@ namespace simplex_method
         /// </summary>
         public List<List<double>> ReturnElements()
         {
-            simplex_elements.RemoveAt(simplex_elements.Count - 1);
+            //simplex_elements.RemoveAt(simplex_elements.Count - 1);
             return simplex_elements;
         }
 
@@ -1127,6 +1202,23 @@ namespace simplex_method
         public void VisibleSimplexTable()
         {
             simplextablegrid.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Задать массив визуализации.
+        /// </summary>
+        /// <param name="variable_visualization"></param>
+        public void SetVariableVisualization(int[] variable_visualization)
+        {
+            this.variable_visualization = variable_visualization;
+        }
+
+        /// <summary>
+        /// Задать систему коэффициентов.
+        /// </summary>
+        public void SetElements(List<List<double>> elements)
+        {
+            this.elements = elements;
         }
     }
 }
