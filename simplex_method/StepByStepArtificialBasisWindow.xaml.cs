@@ -54,8 +54,9 @@ namespace simplex_method
         /// Тип шага. True - обычный, false - холостой.
         /// </summary>
         List<bool> type_of_step = new List<bool>();
-        bool memory;
-        bool first;
+        /// <summary>
+        /// Симплекс-таблица была нарисована.
+        /// </summary>
         bool simplex_table_was_draw;
         /// <summary>
         /// Ищем минимум или максимум(0-минимум,1-максимум).
@@ -89,7 +90,6 @@ namespace simplex_method
             this.target_function_elements = target_function_elements;
             step = 1;
             step_1 = 0;
-            memory = false;
             simplex_table_was_draw = false;
             this.MinMax = MinMax;
 
@@ -109,8 +109,6 @@ namespace simplex_method
             simplextable.AddTilde();
             if (simplextable.ResponseCheck() == 1)
             {
-                //type_of_step.Add(false);
-                first = false;
                 labelsteps.Content = "Холостой шаг: Метод искусственного базиса. Выбор опорного элемента.";
                 //холостой шаг
                 simplextable.IdleStep();
@@ -118,8 +116,6 @@ namespace simplex_method
             }
             else
             {
-                //type_of_step.Add(true);
-                first = true;
                 labelsteps.Content = "Шаг " + step + ": Метод искусственного базиса. Выбор опорного элемента.";
                 //выбор опорного
                 simplextable.SelectionOfTheSupportElement();
@@ -147,9 +143,14 @@ namespace simplex_method
         {
             try
             {
+                //для запоминания типа шага
+                if (simplextable.ResponseCheck() == 1)
+                    type_of_step.Add(false);
+                else
+                    type_of_step.Add(true);
+
                 //выбран ли опорный элемент
                 simplextable.ButtonPressedOrNot();
-                memory = false;
                 //Смена местами визуализаций переменных(после выбора опорного элемента) + буферизация.
                 simplextable.ChangeOfVisualizationVariables();
                 //буферизация данных
@@ -161,10 +162,6 @@ namespace simplex_method
                 //обновление данных сиплекс-таблицы
                 simplextable.UpdateSimplexTableValues();
                 simplextable.CornerPoint(step);
-                if (step == 1)
-                {
-                    type_of_step.Add(first);
-                }
                 //проверка решения
                 switch (simplextable.ArtificialResponseCheck())
                 {
@@ -246,7 +243,6 @@ namespace simplex_method
                     case false:
                         if (simplextable.ResponseCheck() == 1)
                         {
-                            type_of_step.Add(false);
                             step++;
                             labelsteps.Content = "Холостой шаг: Метод искусственного базиса. Выбор опорного элемента.";
                             //холостой шаг
@@ -255,7 +251,6 @@ namespace simplex_method
                         }
                         else
                         {
-                            type_of_step.Add(true);
                             step++;
                             labelsteps.Content = "Шаг " + step + ": Метод искусственного базиса. Выбор опорного элемента.";
                             //выбор опорного
@@ -295,45 +290,30 @@ namespace simplex_method
                 simplextable.GetOutOfTheBufferVisualizationVariablesTest();
                 //обновление данных сиплекс-таблицы
                 simplextable.UpdateSimplexTableValues();
-                if (memory == false)
+                if (type_of_step[type_of_step.Count - 1] == true)
                 {
-                    if (type_of_step[type_of_step.Count - 2] == true)
-                    {
-                        //выбор опорного
-                        simplextable.SelectionOfTheSupportElement();
-                        type_of_step.RemoveAt(type_of_step.Count - 1);
-                        type_of_step.RemoveAt(type_of_step.Count - 1);
-                    }
-                    else
-                    {
-                        //холостой шаг
-                        simplextable.IdleStep();
-                        type_of_step.RemoveAt(type_of_step.Count - 1);
-                        type_of_step.RemoveAt(type_of_step.Count - 1);
-                    }
-                    memory = true;
+                    //выбор опорного
+                    simplextable.SelectionOfTheSupportElement();
+                    type_of_step.RemoveAt(type_of_step.Count - 1);
+                    step--;
+                    labelsteps.Content = "Шаг " + step + ": Симплекс-таблица. Выбор опорного элемента.";
+                    corner_dot.Visibility = Visibility.Hidden;
+                    buttonToMainWindow.Visibility = Visibility.Hidden;
+                    buttonNext1.Visibility = Visibility.Hidden;
+                    simplextable.CornerPoint(step - 1);
                 }
                 else
                 {
-                    if (type_of_step[type_of_step.Count - 1] == true)
-                    {
-                        //выбор опорного
-                        simplextable.SelectionOfTheSupportElement();
-                        type_of_step.RemoveAt(type_of_step.Count - 1);
-                    }
-                    else
-                    {
-                        //холостой шаг
-                        simplextable.IdleStep();
-                        type_of_step.RemoveAt(type_of_step.Count - 1);
-                    }
+                    //холостой шаг
+                    simplextable.IdleStep();
+                    type_of_step.RemoveAt(type_of_step.Count - 1);
+                    step--;
+                    labelsteps.Content = "Холостой шаг: Метод искусственного базиса. Выбор опорного элемента.";
+                    corner_dot.Visibility = Visibility.Hidden;
+                    buttonToMainWindow.Visibility = Visibility.Hidden;
+                    buttonNext1.Visibility = Visibility.Hidden;
+                    simplextable.CornerPoint(step - 1);
                 }
-                step--;
-                labelsteps.Content = "Шаг " + step + ": Симплекс-таблица. Выбор опорного элемента.";
-                corner_dot.Visibility = Visibility.Hidden;
-                buttonToMainWindow.Visibility = Visibility.Hidden;
-                buttonNext1.Visibility = Visibility.Hidden;
-                simplextable.CornerPoint(step - 1);
             }
         }
 
@@ -417,8 +397,6 @@ namespace simplex_method
             {
                 MainGrid.Children.Remove(simplextable1);
                 simplextable.VisibleSimplexTable();
-                memory = true;
-                //simplextable.GetOutOfTheBufferSimplexTest();
                 corner_dot.Visibility = Visibility.Hidden;
                 buttonBack1.Visibility = Visibility.Hidden;
                 buttonNext1.Visibility = Visibility.Hidden;
