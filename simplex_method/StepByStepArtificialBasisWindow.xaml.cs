@@ -61,7 +61,18 @@ namespace simplex_method
         /// Ищем минимум или максимум(0-минимум,1-максимум).
         /// </summary>
         int MinMax;
+        /// <summary>
+        /// Счётчик шагов для основного симплекс-метода
+        /// </summary>
         int step_1;
+        /// <summary>
+        /// Угловая точка соответствующая решению.
+        /// </summary>
+        Grid corner_dot = new Grid();
+        /// <summary>
+        /// Угловая точка соответствующая решению была уже нарисована.
+        /// </summary>
+        bool corner_dot_was_added = false;
 
         public StepByStepArtificialBasisWindow(List<List<double>> elements, int number_of_basix, int[] variable_visualization, double[] target_function_elements, int MinMax)
         {
@@ -213,6 +224,14 @@ namespace simplex_method
                                 if (MinMax == 0)
                                     labelsteps.Content = "Ответ :" + simplextable1.Response() * (-1);
                                 else labelsteps.Content = "Ответ :" + simplextable1.Response();
+                                if (corner_dot_was_added == false)
+                                {
+                                    //добавляем точку
+                                    corner_dot = simplextable.ResponseCornerDot(step);
+                                    MainGrid.Children.Add(corner_dot);
+                                    corner_dot_was_added = true;
+                                }
+                                corner_dot.Visibility = Visibility.Visible;
                                 buttonToMainWindow.Visibility = Visibility.Visible;
                                 buttonNext1.Visibility = Visibility.Hidden;
                                 break;
@@ -311,6 +330,7 @@ namespace simplex_method
                 }
                 step--;
                 labelsteps.Content = "Шаг " + step + ": Симплекс-таблица. Выбор опорного элемента.";
+                corner_dot.Visibility = Visibility.Hidden;
                 buttonToMainWindow.Visibility = Visibility.Hidden;
                 buttonNext1.Visibility = Visibility.Visible;
                 simplextable.CornerPoint(step - 1);
@@ -347,6 +367,14 @@ namespace simplex_method
                         if (MinMax == 0)
                             labelsteps.Content = "Ответ :" + simplextable1.Response() * (-1);
                         else labelsteps.Content = "Ответ :" + simplextable1.Response();
+                        if (corner_dot_was_added == false)
+                        {
+                            //добавляем точку
+                            corner_dot = simplextable.ResponseCornerDot(step);
+                            MainGrid.Children.Add(corner_dot);
+                            corner_dot_was_added = true;
+                        }
+                        corner_dot.Visibility = Visibility.Visible;
                         buttonToMainWindow.Visibility = Visibility.Visible;
                         buttonNext1.Visibility = Visibility.Hidden;
                         break;
@@ -382,6 +410,7 @@ namespace simplex_method
                 simplextable1.SelectionOfTheSupportElement();
                 step_1--;
                 labelsteps.Content = "Шаг " + step_1 + ": Симплекс-таблица. Выбор опорного элемента.";
+                corner_dot.Visibility = Visibility.Hidden;
                 buttonToMainWindow.Visibility = Visibility.Hidden;
                 buttonNext1.Visibility = Visibility.Visible;
                 simplextable1.CornerPoint(step_1);
@@ -393,6 +422,7 @@ namespace simplex_method
                 simplextable.VisibleSimplexTable();
                 memory = true;
                 //simplextable.GetOutOfTheBufferSimplexTest();
+                corner_dot.Visibility = Visibility.Hidden;
                 buttonBack1.Visibility = Visibility.Hidden;
                 buttonNext1.Visibility = Visibility.Hidden;
                 buttonBack.Visibility = Visibility.Visible;

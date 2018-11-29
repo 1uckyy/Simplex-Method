@@ -67,6 +67,14 @@ namespace simplex_method
         /// Была ли введена угловая точка(false - нет, true - да).
         /// </summary>
         bool? CornerDot;
+        /// <summary>
+        /// Угловая точка соответствующая решению.
+        /// </summary>
+        Grid corner_dot=new Grid();
+        /// <summary>
+        /// Угловая точка соответствующая решению была уже нарисована.
+        /// </summary>
+        bool corner_dot_was_added=false;
 
         /// <summary>
         /// Конструктор для окна выполнения пошагового симплекс-метода.
@@ -411,6 +419,15 @@ namespace simplex_method
                             if (MinMax == 0)
                                 labelsteps.Content = "Ответ :" + simplextable.Response() * (-1);
                             else labelsteps.Content = "Ответ :" + simplextable.Response();
+                            if (corner_dot_was_added == false)
+                            {
+                                //добавляем точку
+                                corner_dot = simplextable.ResponseCornerDot(step);
+                                MainGrid.Children.Add(corner_dot);
+                                corner_dot_was_added = true;
+                            }
+                            //показываем угловую точку решения
+                            corner_dot.Visibility = Visibility.Hidden;
                             buttonToMainWindow.Visibility = Visibility.Visible;
                             break;
                         case -1:
@@ -456,6 +473,16 @@ namespace simplex_method
                                 if (MinMax == 0)
                                     labelsteps.Content = "Ответ :" + simplextable.Response() * (-1);
                                 else labelsteps.Content = "Ответ :" + simplextable.Response();
+                                //если не была добавлена, то добавляем
+                                if (corner_dot_was_added == false)
+                                {
+                                    //добавляем точку
+                                    corner_dot = simplextable.ResponseCornerDot(step - 4);
+                                    MainGrid.Children.Add(corner_dot);
+                                    corner_dot_was_added = true;
+                                }
+                                //показываем угловую точку решения
+                                corner_dot.Visibility = Visibility.Visible;
                                 buttonToMainWindow.Visibility = Visibility.Visible;
                                 break;
                             case -1:
@@ -513,6 +540,8 @@ namespace simplex_method
                     scrollgaussgrid.Visibility = Visibility.Visible;
                     //скрываем симплекс-таблицу
                     simplextable.Visibility = Visibility.Hidden;
+                    //скрываем угловую точку решения
+                    corner_dot.Visibility = Visibility.Hidden;
                     step--;
                     labelsteps.Content = "Шаг 2: Выражение базисных переменных.";
                     buttonToMainWindow.Visibility = Visibility.Hidden;
@@ -525,6 +554,8 @@ namespace simplex_method
                     step--;
                     labelsteps.Content = "Шаг 3: Симплекс-таблица.";
                     buttonToMainWindow.Visibility = Visibility.Hidden;
+                    //скрываем угловую точку решения
+                    corner_dot.Visibility = Visibility.Hidden;
                     break;
                 default:
                     //убираем кнопки
@@ -539,6 +570,8 @@ namespace simplex_method
                     step--;
                     labelsteps.Content = "Шаг " + step + ": Симплекс-таблица. Выбор опорного элемента.";
                     buttonToMainWindow.Visibility = Visibility.Hidden;
+                    //скрываем угловую точку решения
+                    corner_dot.Visibility = Visibility.Hidden;
                     simplextable.CornerPoint(step - 4);
                     break;
             }

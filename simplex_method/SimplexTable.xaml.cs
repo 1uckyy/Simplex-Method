@@ -245,7 +245,7 @@ namespace simplex_method
         public void GetOutOfTheBufferVisualizationVariablesTest()
         {
             variable_visualization = new int[buffer_variable_visualization[0].Count];
-            for (int j = 0; j < buffer_variable_visualization[buffer_variable_visualization.Count-1].Count; j++)
+            for (int j = 0; j < buffer_variable_visualization[buffer_variable_visualization.Count - 1].Count; j++)
                 variable_visualization[j] = buffer_variable_visualization[buffer_variable_visualization.Count - 1][j];
             buffer_variable_visualization.RemoveAt(buffer_variable_visualization.Count - 1);
 
@@ -556,7 +556,7 @@ namespace simplex_method
             buffer_simplex_elements.Add(new List<List<double>>());
             for (int i = 0; i < simplex_elements.Count; i++)
             {
-                buffer_simplex_elements[buffer_simplex_elements.Count-1].Add(new List<double>());
+                buffer_simplex_elements[buffer_simplex_elements.Count - 1].Add(new List<double>());
                 for (int j = 0; j < simplex_elements[0].Count; j++)
                     buffer_simplex_elements[buffer_simplex_elements.Count - 1][i].Add(simplex_elements[i][j]);
             }
@@ -708,7 +708,7 @@ namespace simplex_method
         {
             //for (int i = 0; i < buffer_simplex_elements[buffer_simplex_elements.Count-1].Count; i++)
             //    for (int j = 0; j < buffer_simplex_elements[buffer_simplex_elements.Count - 1][0].Count; j++)
-                    simplex_elements = buffer_simplex_elements[buffer_simplex_elements.Count - 1];
+            simplex_elements = buffer_simplex_elements[buffer_simplex_elements.Count - 1];
             buffer_simplex_elements.RemoveAt(buffer_simplex_elements.Count - 1);
         }
 
@@ -832,9 +832,9 @@ namespace simplex_method
                 //если это переменная которую ещё нужно выразить
                 if (Int32.Parse(temp) > number_of_free_variables)
                 {
-                    for (int j = 0; j < simplex_elements[0].Count-1; j++)
+                    for (int j = 0; j < simplex_elements[0].Count - 1; j++)
                     {
-                        if (simplex_elements[i-1][j] != 0)
+                        if (simplex_elements[i - 1][j] != 0)
                         {
                             //находим label
                             Label lbl2 = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + (j + 1));
@@ -848,7 +848,7 @@ namespace simplex_method
                             btn.BorderBrush = Brushes.Red;
                             //click
                             btn.Click += new RoutedEventHandler(btn_Click);
-                            btn.Name = "simplexbutton" + (i-1) + "_" + j;
+                            btn.Name = "simplexbutton" + (i - 1) + "_" + j;
                             //регистрируем имя
                             RegisterName(btn.Name, btn);
                             Grid.SetColumn(btn, j + 1);
@@ -858,7 +858,7 @@ namespace simplex_method
 
                             //координаты возможного опорного элемента
                             the_coordinates_of_the_support_element.Add(new List<int>());
-                            the_coordinates_of_the_support_element[index].Add(i-1);
+                            the_coordinates_of_the_support_element[index].Add(i - 1);
                             the_coordinates_of_the_support_element[index].Add(j);
                             index++;
                         }
@@ -968,6 +968,105 @@ namespace simplex_method
         }
 
         /// <summary>
+        /// Угловая точка соответствующая решению.
+        /// </summary>
+        /// <returns>Возвращает угловою точку.</returns>
+        public Grid ResponseCornerDot(int step)
+        {
+            Grid corner_dot = new Grid();
+            corner_dot.HorizontalAlignment = HorizontalAlignment.Left;
+            corner_dot.Margin = new Thickness(25, 60, 0, 0);
+            SettingMatrix(1, variable_visualization.Length * 2 + 1, corner_dot);
+            //угловая точка соответствующая решению
+            double[] finish_corner_dot = ResponseDot();
+
+            int width = 0; //измеряем ширину для grid'a
+            int index_basix = 0;//вспомогательный индекс
+            for (int j = 0; j < corner_dot.ColumnDefinitions.Count; j++)
+            {
+                if (j == 0)
+                {
+                    //надстрочный символ
+                    Label variable2 = new Label();
+                    variable2.Content = "(" + step + ")";
+                    variable2.FontSize = 7.5;
+                    variable2.Width = 20;
+                    variable2.Height = 20;
+                    variable2.Margin = new Thickness(4, -4, 5, 9);
+                    Grid.SetColumn(variable2, j);
+                    Grid.SetRow(variable2, 0);
+                    corner_dot.Children.Add(variable2);
+
+
+                    Label variable = new Label();
+                    variable.Content = "X =(";
+                    width += 35;
+                    variable.Width = 35;
+                    variable.Height = 30;
+                    Grid.SetColumn(variable, j);
+                    Grid.SetRow(variable, 0);
+                    corner_dot.Children.Add(variable);
+                }
+                else if (j % 2 != 0)
+                {
+                    //создаём новый label
+                    Label txt = new Label();
+                    txt.Content = Math.Round(finish_corner_dot[index_basix], 2).ToString();
+                    width += 33;
+                    txt.Height = 30;
+                    txt.Width = 33;
+                    //устанавливаем столбец
+                    Grid.SetColumn(txt, j);
+                    //устанавливаем строку
+                    Grid.SetRow(txt, 0);
+                    //добавляем в grid
+                    corner_dot.Children.Add(txt);
+                    index_basix++;
+                }
+                else
+                {
+                    Label variable = new Label();
+                    if (j == corner_dot.ColumnDefinitions.Count - 1)
+                        variable.Content = ")";
+                    else
+                        variable.Content = ",";
+                    width += 15;
+                    variable.Width = 15;
+                    variable.Height = 30;
+                    Grid.SetColumn(variable, j);
+                    Grid.SetRow(variable, 0);
+                    corner_dot.Children.Add(variable);
+                }
+            }
+            corner_dot.Width = width;
+
+            return corner_dot;
+        }
+
+        /// <summary>
+        /// Коэффициенты угловой точки переносятся в массив.
+        /// </summary>
+        /// <returns>Массив коэффициентов угловой точки.</returns>
+        private double[] ResponseDot()
+        {
+            //угловая точка соответствующая решению
+            double[] finish_corner_dot = new double[variable_visualization.Length];
+
+            //вспомогательная переменная
+            int temp;
+
+            //заполняем коэффициентами
+            for (int i = 1; i < simplextablegrid.RowDefinitions.Count - 1; i++)
+            {
+                Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_0");
+                temp = Int32.Parse(lbl.Content.ToString().Trim('x'));
+                finish_corner_dot[temp - 1] = simplex_elements[i - 1][simplex_elements[0].Count - 1];
+            }
+
+            return finish_corner_dot;
+        }
+
+        /// <summary>
         /// Возвращение массива визуализации.
         /// </summary>
         public int[] ReturnVariableVisualization()
@@ -980,7 +1079,7 @@ namespace simplex_method
                     //удаляем в массиве
                     for (int k = 0; k < simplex_elements.Count; k++)
                     {
-                        simplex_elements[k].RemoveAt(i-number_of_permutations);
+                        simplex_elements[k].RemoveAt(i - number_of_permutations);
                     }
 
                     //удаляем визуализацию
@@ -1010,7 +1109,7 @@ namespace simplex_method
         /// </summary>
         public List<List<double>> ReturnElements()
         {
-            simplex_elements.RemoveAt(simplex_elements.Count-1);
+            simplex_elements.RemoveAt(simplex_elements.Count - 1);
             return simplex_elements;
         }
 

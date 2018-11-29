@@ -51,6 +51,10 @@ namespace simplex_method
         /// Симплекс-таблица.
         /// </summary>
         SimplexTable simplextable;
+        /// <summary>
+        /// Угловая точка соответствующая решению.
+        /// </summary>
+        Grid corner_dot;
 
 
         public AutoModeSimplexTable(List<List<double>> elements, bool? CornerDot, int[] variable_visualization, int number_of_basix, double[] target_function_elements, int MinMax)
@@ -114,6 +118,9 @@ namespace simplex_method
                     if (MinMax == 0)
                         labelanswer.Content = "Ответ :" + simplextable.Response() * (-1);
                     else labelanswer.Content = "Ответ :" + simplextable.Response();
+                    //добавляем точку
+                    corner_dot = simplextable.ResponseCornerDot(step-1);
+                    MainGrid.Children.Add(corner_dot);
                     buttonToMainWindow.Visibility = Visibility.Visible;
                     break;
                 }
