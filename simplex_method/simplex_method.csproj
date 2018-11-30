@@ -171,6 +171,10 @@
       <Project>{1ab38784-2dc5-4b80-966c-c43519247ff7}</Project>
       <Name>MatrixLogicLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OrdinaryFractionLibrary\OrdinaryFractionLibrary.csproj">
+      <Project>{9a932714-8979-47ec-9987-ea164dc425b1}</Project>
+      <Name>OrdinaryFractionLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="arrowleft.png" />
