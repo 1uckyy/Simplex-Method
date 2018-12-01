@@ -311,27 +311,25 @@ namespace simplex_method
         }
 
         /// <summary>
-        /// Заполнение вспомогательного массива для подсчёта ранга.(в зависимости от вида дробей)
+        /// Заполнение вспомогательного массива для подсчёта ранга.
         /// </summary>
         private void SupportArray(bool? decimals_or_simple)
         {
             if (decimals_or_simple == true)
-            {
                 copy_elements = new List<List<double>>();
-                for (int i = 0; i < elements.Count; i++)
-                {
-                    copy_elements.Add(new List<double>());
-                    for (int j = 0; j < elements[0].Count; j++)
-                        copy_elements[i].Add(elements[i][j]);
-                }
-            }
             else
-            {
                 copy_fractions = new List<List<ordinary_fraction>>();
-                for (int i = 0; i < fractions.Count; i++)
-                {
+            for (int i = 0; i < elements.Count; i++)
+            {
+                if (decimals_or_simple == true)
+                    copy_elements.Add(new List<double>());
+                else
                     copy_fractions.Add(new List<ordinary_fraction>());
-                    for (int j = 0; j < fractions[0].Count; j++)
+                for (int j = 0; j < elements[0].Count; j++)
+                {
+                    if (decimals_or_simple == true)
+                        copy_elements[i].Add(elements[i][j]);
+                    else
                         copy_fractions[i].Add(fractions[i][j]);
                 }
             }
@@ -355,12 +353,8 @@ namespace simplex_method
             else
                 SupportArray(false);
 
-            //Ранг матрицы.
-            int rang;
-            if (radioButtonDecimals.IsChecked == true)
-                rang = RangOfMatrix(copy_elements);
-            else
-                rang = RangOfMatrix(copy_fractions);
+            //ранг матрицы
+            int rang = RangOfMatrix(copy_elements);
 
             //если выбраны пошаговый режим, симплекс-метод и задание начальной угловой точки
             if ((stepbystepmode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == true))

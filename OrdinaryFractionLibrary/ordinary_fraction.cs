@@ -36,26 +36,12 @@ namespace OrdinaryFractionLibrary
         {
             //вспомогательный массив(определяем верхнее число и нижнее)
             string[] temp = str.Split('/');
-
             //если это дробное число
             if (temp.Length == 2)
-            {
-                //новые числитель и знаменатель
-                int top_new_number = Int32.Parse(temp[0]);
-                int bottom_new_number = Int32.Parse(temp[1]);
-
-                //наибольший общий делить
-                int nod = GreatestCommonDivisor(top_new_number, bottom_new_number);
-
-                //сокращаем и числитель, и знаменатель
-                top_new_number /= nod;
-                bottom_new_number /= nod;
-
-                return new ordinary_fraction { fraction = top_new_number+"/"+ bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number };
-            }
+                return new ordinary_fraction { fraction = str, top_number = Int32.Parse(temp[0]), bottom_number = Int32.Parse(temp[1])};
             //иначе это целое число
             else
-                return new ordinary_fraction { fraction = temp[0] + "/1", top_number = Int32.Parse(temp[0]), bottom_number = 1 };
+                return new ordinary_fraction { fraction = temp[0]+"/1", top_number = Int32.Parse(temp[0]) , bottom_number=1};
         }
 
         /// <summary>
@@ -124,7 +110,6 @@ namespace OrdinaryFractionLibrary
         /// <returns>Наибольший общий делитель.</returns>
         public static int GreatestCommonDivisor(int a, int b)
         {
-            a = Math.Abs(a);
             while (a != 0 && b != 0)
             {
                 if (a > b)
