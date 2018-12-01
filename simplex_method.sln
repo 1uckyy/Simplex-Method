@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simplex_method", "simplex_m
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixLogicLibrary", "MatrixLogicLibrary\MatrixLogicLibrary.csproj", "{1AB38784-2DC5-4B80-966C-C43519247FF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdinaryFractionLibrary", "OrdinaryFractionLibrary\OrdinaryFractionLibrary.csproj", "{9A932714-8979-47EC-9987-EA164DC425B1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdinaryFraction.Tests", "OrdinaryFraction.Tests\OrdinaryFraction.Tests.csproj", "{29E5FFD0-C948-444A-B899-32B5DD05CAE6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +21,6 @@ Global
 		{1AB38784-2DC5-4B80-966C-C43519247FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AB38784-2DC5-4B80-966C-C43519247FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AB38784-2DC5-4B80-966C-C43519247FF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A932714-8979-47EC-9987-EA164DC425B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A932714-8979-47EC-9987-EA164DC425B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A932714-8979-47EC-9987-EA164DC425B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A932714-8979-47EC-9987-EA164DC425B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{29E5FFD0-C948-444A-B899-32B5DD05CAE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29E5FFD0-C948-444A-B899-32B5DD05CAE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29E5FFD0-C948-444A-B899-32B5DD05CAE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29E5FFD0-C948-444A-B899-32B5DD05CAE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

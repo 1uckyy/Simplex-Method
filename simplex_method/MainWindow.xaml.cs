@@ -12,7 +12,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
-using OrdinaryFractionLibrary;
 
 namespace simplex_method
 {
@@ -23,28 +22,17 @@ namespace simplex_method
     /// 
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// Система коэффициентов десятичных дробей.
-        /// </summary>
-        List<List<double>> elements;
-        /// <summary>
-        /// Система коэффициентов обыкновенных дробей.
-        /// </summary>
-        List<List<ordinary_fraction>> fractions;
-        /// <summary>
-        /// Вспомогательный массив для подсчёта ранга(десятичные).
-        /// </summary>
-        List<List<double>> copy_elements;
-        /// <summary>
-        /// Вспомогательный массив для подсчёта ранга(обыкновенные).
-        /// </summary>
-        List<List<ordinary_fraction>> copy_fractions;
+        List<List<double>> elements = new List<List<double>>();
         int num_variable;
         public static TextBox textBoxDirectory = new TextBox();
 
         public MainWindow()
         {
             InitializeComponent();
+            //textBoxDirectory.IsEnabled = false;
+            //startgrid.Children.Add(textBoxDirectory);
+            //textBoxDirectory.Margin = new Thickness(146, 364, 160, 10);
+            //textBoxDirectory.Height = 23;
             textBoxDirectory.Text = "не установлен";
             textBoxDirectory.SelectionChanged += new RoutedEventHandler(Selection_Changed);
         }
@@ -52,6 +40,9 @@ namespace simplex_method
         //после изменения значения в combobox со строками
         private void dimension1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //отображаем в combobox'е выбранное значение
+            //dimension1.Text = (Int32.Parse(dimension1.SelectedIndex.ToString()) + 1).ToString();
+
             //отлавливаем проблему, когда при запуске программы выполняется метод dimension1_SelectionChanged(так как по умолчанию выбрано 3 строки), но при этом grid ещё не создан и мы не можем на него ссылаться
             try
             {
@@ -276,122 +267,206 @@ namespace simplex_method
             }
         }
 
-        /// <summary>
-        /// Добавление в массив в зависимости от вида дробей.
-        /// </summary>
-        /// <param name="decimals_or_simple">True - десятичные дроби, false - обыкновенные дроби.</param>
-        private void AddToArray(bool? decimals_or_simple)
-        {
-            if (decimals_or_simple == true)
-                elements = new List<List<double>>();
-            else
-                fractions = new List<List<ordinary_fraction>>();
-
-            //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
-            for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
-            {
-                if (decimals_or_simple == true)
-                    elements.Add(new List<double>());
-                else
-                    fractions.Add(new List<ordinary_fraction>());
-                for (int j = 0; j < entergrid.ColumnDefinitions.Count; j++)
-                {
-                    if (j % 2 == 0)
-                    {
-                        //находим textbox
-                        TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
-                        //добавляем в массив число
-                        if (decimals_or_simple == true)
-                            elements[i].Add(double.Parse(txt.Text));
-                        else
-                            fractions[i].Add(txt.Text);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Заполнение вспомогательного массива для подсчёта ранга.
-        /// </summary>
-        private void SupportArray(bool? decimals_or_simple)
-        {
-            if (decimals_or_simple == true)
-                copy_elements = new List<List<double>>();
-            else
-                copy_fractions = new List<List<ordinary_fraction>>();
-            for (int i = 0; i < elements.Count; i++)
-            {
-                if (decimals_or_simple == true)
-                    copy_elements.Add(new List<double>());
-                else
-                    copy_fractions.Add(new List<ordinary_fraction>());
-                for (int j = 0; j < elements[0].Count; j++)
-                {
-                    if (decimals_or_simple == true)
-                        copy_elements[i].Add(elements[i][j]);
-                    else
-                        copy_fractions[i].Add(fractions[i][j]);
-                }
-            }
-        }
-
         //кнопка "решить"
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
-
-            //Добавление в массив в зависимости от вида дробей.
-            if (radioButtonDecimals.IsChecked == true)
-                AddToArray(true);
-            else
-                AddToArray(false);
-
-            //Заполнение вспомогательного массива для подсчёта ранга.
-            if (radioButtonDecimals.IsChecked == true)
-                SupportArray(true);
-            else
-                SupportArray(false);
-
-            //ранг матрицы
-            int rang = RangOfMatrix(copy_elements);
-
-            //если выбраны пошаговый режим, симплекс-метод и задание начальной угловой точки
-            if ((stepbystepmode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == true))
+            try
             {
-                int index = 0;//индекс переменной, которая является базисной
-                int count_basix_var = 0;//число базисных переменных
+                elements = new List<List<double>>();
 
-                //проверяем на возможность выражения базисных переменных
-                for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
+                //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
+                for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
                 {
-                    if (j % 2 != 0)
+                    elements.Add(new List<double>());
+                    for (int j = 0; j < entergrid.ColumnDefinitions.Count; j++)
                     {
-                        //находим textbox
-                        TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
-                        //проверяем базисная ли переменная
-                        if (Int32.Parse(txt.Text) != 0)
+                        if (j % 2 == 0)
                         {
-                            CheckCanBeBasix(index);
-                            count_basix_var++;
+                            //находим textbox
+                            TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
+                            //добавляем в массив число
+                            elements[i].Add(Int32.Parse(txt.Text));
                         }
-                        index++;
                     }
                 }
 
-                //проверяем совпадает ли число базисных переменных с рангом матрицы
-                if (rang != count_basix_var)
-                    throw new Exception("Ранг матрицы (ранг=" + rang + ") не равен числу заданных базисных переменных (кол-во=" + count_basix_var + ").");
-
-
-                //если число ограничений-равенств больше ранга матрицы
-                if ((dimension1.SelectedIndex + 1) > rang)
+                //вспомогательный массив для подсчёта ранга
+                List<List<double>> copy_elements = new List<List<double>>();
+                for (int i = 0; i < elements.Count; i++)
                 {
-                    //если решаем продолжать
-                    if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    copy_elements.Add(new List<double>());
+                    for (int j = 0; j < elements[0].Count; j++)
+                    {
+                        copy_elements[i].Add(elements[i][j]);
+                    }
+                }
+
+                //ранг матрицы
+                int rang = RangOfMatrix(copy_elements);
+
+                //если выбраны пошаговый режим, симплекс-метод и задание начальной угловой точки
+                if ((stepbystepmode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == true))
+                {
+                    int index = 0;//индекс переменной, которая является базисной
+                    int count_basix_var = 0;//число базисных переменных
+
+                    //проверяем на возможность выражения базисных переменных
+                    for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
+                    {
+                        if (j % 2 != 0)
+                        {
+                            //находим textbox
+                            TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
+                            //проверяем базисная ли переменная
+                            if (Int32.Parse(txt.Text) != 0)
+                            {
+                                CheckCanBeBasix(index);
+                                count_basix_var++;
+                            }
+                            index++;
+                        }
+                    }
+
+                    //проверяем совпадает ли число базисных переменных с рангом матрицы
+                    if (rang != count_basix_var)
+                        throw new Exception("Ранг матрицы (ранг=" + rang + ") не равен числу заданных базисных переменных (кол-во=" + count_basix_var + ").");
+
+
+                    //если число ограничений-равенств больше ранга матрицы
+                    if ((dimension1.SelectedIndex + 1) > rang)
+                    {
+                        //если решаем продолжать
+                        if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+
+
+                            //вспомогательный массив для дальнейшего отображения переменных
+                            int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
+                            //меняем местами столбцы для прямого хода метода Гаусса
+                            int count = ChangeColumnsForGauss(copy_elements, variable_visualization);
+
+
+                            //массив для коэффициентов целевой функции
+                            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                            //заполняем массив коэффициентов целевой функции
+                            FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+
+                            //создаём экземпляр окна для пошагового режима
+                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                            //открываем
+                            SBSSW.Show();
+                            //закрываем основной
+                            this.Close();
+                        }
+                    }
+                    //если никакие строки убирать не надо, тогда идём обычным путём
+                    else
+                    {
+                        //вспомогательный массив для дальнейшего отображения переменных
+                        int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
+                        //меняем местами столбцы для прямого хода метода Гаусса
+                        int count = ChangeColumnsForGauss(elements, variable_visualization);
+
+                        //массив для коэффициентов целевой функции
+                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        //заполняем массив коэффициентов целевой функции
+                        FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+                        //создаём экземпляр окна
+                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        //открываем
+                        SBSSW.Show();
+                        //закрываем основной
+                        this.Close();
+                    }
+                }
+                //если выбраны пошаговый режим и симплекс-метод без задания начальной угловой точки
+                else if ((stepbystepmode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == false))
+                {
+                    //если число ограничений-равенств больше ранга матрицы
+                    if ((dimension1.SelectedIndex + 1) > rang)
+                    {
+                        //если решаем продолжать
+                        if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+
+                            //вспомогательный массив для дальнейшего отображения переменных
+                            int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
+                            //Заполняем массив визуализации переменных. Например, для x1,x2,x3,x4 заполним [1,2,3,4].
+                            for (int i = 0; i < variable_visualization.Count(); i++)
+                                variable_visualization[i] = i + 1;
+
+                            //массив для коэффициентов целевой функции
+                            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                            //заполняем массив коэффициентов целевой функции
+                            FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+
+                            //создаём экземпляр окна
+                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                            //открываем
+                            SBSSW.Show();
+                            //закрываем основной
+                            this.Close();
+                        }
+                    }
+                    //если никакие строки убирать не надо, тогда идём обычным путём
+                    else
+                    {
+                        //вспомогательный массив для дальнейшего отображения переменных
+                        int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
+                        //Заполняем массив визуализации переменных. Например, для x1,x2,x3,x4 заполним [1,2,3,4].
+                        for (int i = 0; i < variable_visualization.Count(); i++)
+                            variable_visualization[i] = i + 1;
+
+                        //массив для коэффициентов целевой функции
+                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        //заполняем массив коэффициентов целевой функции
+                        FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+                        //создаём экземпляр окна
+                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        //открываем
+                        SBSSW.Show();
+                        //закрываем основной
+                        this.Close();
+                    }
+                }
+                //если выбраны автоматический режим, симплекс-метод и задание начальной угловой точки
+                else if ((automode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == true))
+                {
+                    int index = 0;//индекс переменной, которая является базисной
+                    int count_basix_var = 0;//число базисных переменных
+
+                    //проверяем на возможность выражения базисных переменных
+                    for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
+                    {
+                        if (j % 2 != 0)
+                        {
+                            //находим textbox
+                            TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
+                            //проверяем базисная ли переменная
+                            if (Int32.Parse(txt.Text) != 0)
+                            {
+                                CheckCanBeBasix(index);
+                                count_basix_var++;
+                            }
+                            index++;
+                        }
+                    }
+
+                    //проверяем совпадает ли число базисных переменных с рангом матрицы
+                    if (rang != count_basix_var)
+                        throw new Exception("Ранг матрицы (ранг=" + rang + ") не равен числу заданных базисных переменных (кол-во=" + count_basix_var + ").");
+
+
+                    //если число ограничений-равенств больше ранга матрицы
+                    if ((dimension1.SelectedIndex + 1) > rang)
                     {
                         //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
-
 
                         //вспомогательный массив для дальнейшего отображения переменных
                         int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
@@ -404,44 +479,39 @@ namespace simplex_method
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
-
-                        //создаём экземпляр окна для пошагового режима
-                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        //создаём экземпляр окна для автоматического режима
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
                         //открываем
-                        SBSSW.Show();
+                        AMST.Show();
+                        //закрываем основной
+                        this.Close();
+                    }
+                    //если никакие строки убирать не надо, тогда идём обычным путём
+                    else
+                    {
+                        //вспомогательный массив для дальнейшего отображения переменных
+                        int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
+                        //меняем местами столбцы для прямого хода метода Гаусса
+                        int count = ChangeColumnsForGauss(elements, variable_visualization);
+
+                        //массив для коэффициентов целевой функции
+                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        //заполняем массив коэффициентов целевой функции
+                        FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+                        //создаём экземпляр окна для автоматического режима
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        //открываем
+                        AMST.Show();
                         //закрываем основной
                         this.Close();
                     }
                 }
-                //если никакие строки убирать не надо, тогда идём обычным путём
-                else
+                //если выбраны автоматический режим и симплекс-метод без задания начальной угловой точки
+                else if ((automode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == false))
                 {
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
-                    //меняем местами столбцы для прямого хода метода Гаусса
-                    int count = ChangeColumnsForGauss(elements, variable_visualization);
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    //создаём экземпляр окна
-                    StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
-                    //открываем
-                    SBSSW.Show();
-                    //закрываем основной
-                    this.Close();
-                }
-            }
-            //если выбраны пошаговый режим и симплекс-метод без задания начальной угловой точки
-            else if ((stepbystepmode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == false))
-            {
-                //если число ограничений-равенств больше ранга матрицы
-                if ((dimension1.SelectedIndex + 1) > rang)
-                {
-                    //если решаем продолжать
-                    if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    //если число ограничений-равенств больше ранга матрицы
+                    if ((dimension1.SelectedIndex + 1) > rang)
                     {
                         //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
 
@@ -456,168 +526,70 @@ namespace simplex_method
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
-
-                        //создаём экземпляр окна
-                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        //создаём экземпляр окна для автоматического режима
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
                         //открываем
-                        SBSSW.Show();
+                        AMST.Show();
+                        //закрываем основной
+                        this.Close();
+                    }
+                    //если никакие строки убирать не надо, тогда идём обычным путём
+                    else
+                    {
+                        //вспомогательный массив для дальнейшего отображения переменных
+                        int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
+                        //Заполняем массив визуализации переменных. Например, для x1,x2,x3,x4 заполним [1,2,3,4].
+                        for (int i = 0; i < variable_visualization.Count(); i++)
+                            variable_visualization[i] = i + 1;
+
+                        //массив для коэффициентов целевой функции
+                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        //заполняем массив коэффициентов целевой функции
+                        FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+                        //создаём экземпляр окна для автоматического режима
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        //открываем
+                        AMST.Show();
                         //закрываем основной
                         this.Close();
                     }
                 }
-                //если никакие строки убирать не надо, тогда идём обычным путём
-                else
+                //если выбраны пошаговый режим и метод искусственного базиса
+                else if ((stepbystepmode.IsChecked == true) && (artificialbasismethod.IsSelected == true))
                 {
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
-                    //Заполняем массив визуализации переменных. Например, для x1,x2,x3,x4 заполним [1,2,3,4].
-                    for (int i = 0; i < variable_visualization.Count(); i++)
-                        variable_visualization[i] = i + 1;
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    //создаём экземпляр окна
-                    StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
-                    //открываем
-                    SBSSW.Show();
-                    //закрываем основной
-                    this.Close();
-                }
-            }
-            //если выбраны автоматический режим, симплекс-метод и задание начальной угловой точки
-            else if ((automode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == true))
-            {
-                int index = 0;//индекс переменной, которая является базисной
-                int count_basix_var = 0;//число базисных переменных
-
-                //проверяем на возможность выражения базисных переменных
-                for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
-                {
-                    if (j % 2 != 0)
+                    //если число ограничений-равенств больше ранга матрицы
+                    if ((dimension1.SelectedIndex + 1) > rang)
                     {
-                        //находим textbox
-                        TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
-                        //проверяем базисная ли переменная
-                        if (Int32.Parse(txt.Text) != 0)
+                        //если решаем продолжать
+                        if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
-                            CheckCanBeBasix(index);
-                            count_basix_var++;
+                            //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+
+                            //вспомогательный массив для дальнейшего отображения переменных
+                            int[] variable_visualization = new int[Int32.Parse(dimension2.Text) + rang];
+                            for (int i = 0; i < rang; i++)
+                                variable_visualization[i] = Int32.Parse(dimension2.Text) + i + 1;
+                            //Заполняем массив визуализации переменных..
+                            for (int i = rang; i < variable_visualization.Count(); i++)
+                                variable_visualization[i] = i - rang + 1;
+
+                            //массив для коэффициентов целевой функции
+                            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                            //заполняем массив коэффициентов целевой функции
+                            FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+
+                            //создаём экземпляр окна
+                            StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                            //открываем
+                            SBABW.Show();
+                            //закрываем основной
+                            this.Close();
                         }
-                        index++;
                     }
-                }
-
-                //проверяем совпадает ли число базисных переменных с рангом матрицы
-                if (rang != count_basix_var)
-                    throw new Exception("Ранг матрицы (ранг=" + rang + ") не равен числу заданных базисных переменных (кол-во=" + count_basix_var + ").");
-
-
-                //если число ограничений-равенств больше ранга матрицы
-                if ((dimension1.SelectedIndex + 1) > rang)
-                {
-                    //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
-
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
-                    //меняем местами столбцы для прямого хода метода Гаусса
-                    int count = ChangeColumnsForGauss(copy_elements, variable_visualization);
-
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    //создаём экземпляр окна для автоматического режима
-                    AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
-                    //открываем
-                    AMST.Show();
-                    //закрываем основной
-                    this.Close();
-                }
-                //если никакие строки убирать не надо, тогда идём обычным путём
-                else
-                {
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
-                    //меняем местами столбцы для прямого хода метода Гаусса
-                    int count = ChangeColumnsForGauss(elements, variable_visualization);
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    //создаём экземпляр окна для автоматического режима
-                    AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
-                    //открываем
-                    AMST.Show();
-                    //закрываем основной
-                    this.Close();
-                }
-            }
-            //если выбраны автоматический режим и симплекс-метод без задания начальной угловой точки
-            else if ((automode.IsChecked == true) && simplex.IsSelected && (checkBoxCornerDot.IsChecked == false))
-            {
-                //если число ограничений-равенств больше ранга матрицы
-                if ((dimension1.SelectedIndex + 1) > rang)
-                {
-                    //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
-
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
-                    //Заполняем массив визуализации переменных. Например, для x1,x2,x3,x4 заполним [1,2,3,4].
-                    for (int i = 0; i < variable_visualization.Count(); i++)
-                        variable_visualization[i] = i + 1;
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    //создаём экземпляр окна для автоматического режима
-                    AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
-                    //открываем
-                    AMST.Show();
-                    //закрываем основной
-                    this.Close();
-                }
-                //если никакие строки убирать не надо, тогда идём обычным путём
-                else
-                {
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
-                    //Заполняем массив визуализации переменных. Например, для x1,x2,x3,x4 заполним [1,2,3,4].
-                    for (int i = 0; i < variable_visualization.Count(); i++)
-                        variable_visualization[i] = i + 1;
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    //создаём экземпляр окна для автоматического режима
-                    AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
-                    //открываем
-                    AMST.Show();
-                    //закрываем основной
-                    this.Close();
-                }
-            }
-            //если выбраны пошаговый режим и метод искусственного базиса
-            else if ((stepbystepmode.IsChecked == true) && (artificialbasismethod.IsSelected == true))
-            {
-                //если число ограничений-равенств больше ранга матрицы
-                if ((dimension1.SelectedIndex + 1) > rang)
-                {
-                    //если решаем продолжать
-                    if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    else
                     {
-                        //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
-
                         //вспомогательный массив для дальнейшего отображения переменных
                         int[] variable_visualization = new int[Int32.Parse(dimension2.Text) + rang];
                         for (int i = 0; i < rang; i++)
@@ -631,46 +603,45 @@ namespace simplex_method
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
-
-                        //создаём экземпляр окна
-                        StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
-                        //открываем
+                        StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
                         SBABW.Show();
-                        //закрываем основной
                         this.Close();
                     }
                 }
-                else
+                //если выбраны автоматический режим и метод искусственного базиса
+                else if ((automode.IsChecked == true) && (artificialbasismethod.IsSelected == true))
                 {
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text) + rang];
-                    for (int i = 0; i < rang; i++)
-                        variable_visualization[i] = Int32.Parse(dimension2.Text) + i + 1;
-                    //Заполняем массив визуализации переменных..
-                    for (int i = rang; i < variable_visualization.Count(); i++)
-                        variable_visualization[i] = i - rang + 1;
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
-                    SBABW.Show();
-                    this.Close();
-                }
-            }
-            //если выбраны автоматический режим и метод искусственного базиса
-            else if ((automode.IsChecked == true) && (artificialbasismethod.IsSelected == true))
-            {
-                //если число ограничений-равенств больше ранга матрицы
-                if ((dimension1.SelectedIndex + 1) > rang)
-                {
-                    //если решаем продолжать
-                    if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    //если число ограничений-равенств больше ранга матрицы
+                    if ((dimension1.SelectedIndex + 1) > rang)
                     {
-                        //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+                        //если решаем продолжать
+                        if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
 
+                            //вспомогательный массив для дальнейшего отображения переменных
+                            int[] variable_visualization = new int[Int32.Parse(dimension2.Text) + rang];
+                            for (int i = 0; i < rang; i++)
+                                variable_visualization[i] = Int32.Parse(dimension2.Text) + i + 1;
+                            //Заполняем массив визуализации переменных..
+                            for (int i = rang; i < variable_visualization.Count(); i++)
+                                variable_visualization[i] = i - rang + 1;
+
+                            //массив для коэффициентов целевой функции
+                            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                            //заполняем массив коэффициентов целевой функции
+                            FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+                            //создаём экземпляр окна для автоматического режима
+                            AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                            //открываем
+                            AMAB.Show();
+                            //закрываем основной
+                            this.Close();
+                        }
+                    }
+                    else
+                    {
                         //вспомогательный массив для дальнейшего отображения переменных
                         int[] variable_visualization = new int[Int32.Parse(dimension2.Text) + rang];
                         for (int i = 0; i < rang; i++)
@@ -685,41 +656,18 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
                         //открываем
                         AMAB.Show();
                         //закрываем основной
                         this.Close();
                     }
                 }
-                else
-                {
-                    //вспомогательный массив для дальнейшего отображения переменных
-                    int[] variable_visualization = new int[Int32.Parse(dimension2.Text) + rang];
-                    for (int i = 0; i < rang; i++)
-                        variable_visualization[i] = Int32.Parse(dimension2.Text) + i + 1;
-                    //Заполняем массив визуализации переменных..
-                    for (int i = rang; i < variable_visualization.Count(); i++)
-                        variable_visualization[i] = i - rang + 1;
-
-                    //массив для коэффициентов целевой функции
-                    double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-                    //заполняем массив коэффициентов целевой функции
-                    FillArrayWithCoefOfGoalFunc(target_function_elements);
-
-                    //создаём экземпляр окна для автоматического режима
-                    AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
-                    //открываем
-                    AMAB.Show();
-                    //закрываем основной
-                    this.Close();
-                }
             }
-            //}
-            //catch (Exception d)
-            //{
-            //    MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //}
+            catch (Exception d)
+            {
+                MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         /// <summary>
@@ -796,7 +744,7 @@ namespace simplex_method
         }
 
         /// <summary>
-        /// Ищем ранг матрицы(для десятичных дробей). Вместе с этим в функции уже удаляются "ненужные" строки.
+        /// Ищем ранг матрицы. Вместе с этим в функции уже удаляются "ненужные" строки.
         /// </summary>
         /// <returns>Возвращает ранг матрицы.</returns>
         private int RangOfMatrix(List<List<double>> elements_1)
@@ -835,59 +783,6 @@ namespace simplex_method
                         if (elements_1[k][j] != 0)
                         {
                             double first_elem_1 = elements_1[k][j];
-                            for (int m = 0; m < elements_1[0].Count; m++)
-                            {
-                                elements_1[k][m] = elements_1[k][m] - elements_1[i][m] * first_elem_1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return elements_1.Count;
-        }
-
-        /// <summary>
-        /// Ищем ранг матрицы(для обыкновенных дробей). Вместе с этим в функции уже удаляются "ненужные" строки.
-        /// </summary>
-        /// <returns>Возвращает ранг матрицы.</returns>
-        private int RangOfMatrix(List<List<ordinary_fraction>> elements_1)
-        {
-            //ноль
-            ordinary_fraction first_elem = "0";
-            for (int i = 0; i < elements_1.Count; i++)
-            {
-                int j = 0;
-                first_elem = elements_1[i][j];
-                //находим ненулевой элемент в строке. если такого нет, то удаляем строку из нулей
-                if (first_elem.top_number == 0)
-                {
-                    j = 1;
-                    while (first_elem.top_number == 0)
-                    {
-                        first_elem = elements_1[i][j];
-                        j++;
-                        //если не нашли не нулевого, то удаляем строку из нулей
-                        if (j == elements_1[0].Count)
-                        {
-                            elements_1.RemoveAt(i);
-                            i--;
-                            break;
-                        }
-                    }
-                    j--;
-                }
-
-                //удалось найти не нулевой
-                if (first_elem.top_number != 0)
-                {
-                    for (int p = 0; p < elements_1[0].Count; p++)
-                        elements_1[i][p] /= first_elem;
-                    for (int k = i + 1; k < elements_1.Count; k++)
-                    {
-                        if (elements_1[k][j].top_number != 0)
-                        {
-                            ordinary_fraction first_elem_1 = elements_1[k][j];
                             for (int m = 0; m < elements_1[0].Count; m++)
                             {
                                 elements_1[k][m] = elements_1[k][m] - elements_1[i][m] * first_elem_1;
