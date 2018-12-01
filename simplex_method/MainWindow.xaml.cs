@@ -725,7 +725,6 @@ namespace simplex_method
                     }
                 }
             }
-            //иначе для обыкновенных дробей
             else
             {
                 //если выбраны пошаговый режим, симплекс-метод и задание начальной угловой точки
@@ -762,23 +761,23 @@ namespace simplex_method
                         //если решаем продолжать
                         if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
-                            //тогда работаем с массивом copy_fractions, в котором уже удалены "ненужные" строки
+                            //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
 
 
                             //вспомогательный массив для дальнейшего отображения переменных
                             int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
                             //меняем местами столбцы для прямого хода метода Гаусса
-                            int count = ChangeColumnsForGauss(copy_fractions, variable_visualization);
+                            int count = ChangeColumnsForGauss(copy_elements, variable_visualization);
 
 
                             //массив для коэффициентов целевой функции
-                            ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
+                            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
                             //заполняем массив коэффициентов целевой функции
                             FillArrayWithCoefOfGoalFunc(target_function_elements);
 
 
                             //создаём экземпляр окна для пошагового режима
-                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_fractions, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
                             //открываем
                             SBSSW.Show();
                             //закрываем основной
@@ -1119,34 +1118,7 @@ namespace simplex_method
         }
 
         /// <summary>
-        /// Заполняем массив коэффициентов (для обыкновенных дробей) целевой функции.
-        /// </summary>
-        /// <param name="target_function_elements">Массив для коэффициентов целевой функции.</param>
-        private void FillArrayWithCoefOfGoalFunc(ordinary_fraction[] target_function_elements)
-        {
-            //индекс для массива коэффициентов целевой функции
-            int number_element = 0;
-            //заполняем массив коэффициентов целевой функции
-            for (int j = 0; j < targetfunction.ColumnDefinitions.Count; j++)
-            {
-                if (j % 2 == 0)
-                {
-                    //находим textbox
-                    TextBox txt = (TextBox)targetfunction.FindName("targetfunctiontextBox" + j);
-                    if (comboBoxMinMax.SelectedIndex == 0)
-                        target_function_elements[number_element] = txt.Text;
-                    else
-                    {
-                        target_function_elements[number_element] = txt.Text;
-                        target_function_elements[number_element].top_number *= (-1);
-                    }
-                    number_element++;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Меняем местами столбцы для прямого хода метода Гаусса. (для десятичных дробей)
+        /// Меняем местами столбцы для прямого хода метода Гаусса.
         /// </summary>
         /// <param name="elements_1">Матрица коэффициентов системы ограничений-равенств.</param>
         /// <param name="variable_visualization">Вспомогательный массив для дальнейшего отображения переменных, который хранит индексы переменных в нужном порядке(x1,x3,x2... и другие различные комбинации).</param>
@@ -1172,57 +1144,6 @@ namespace simplex_method
                     TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
                     //проверяем базисная ли переменная
                     if (Int32.Parse(txt.Text) != 0)
-                    {
-                        //меняемся столбцами
-                        for (int i = 0; i < elements_1.Count; i++)
-                        {
-                            temp_for_elements = elements_1[i][number_variable_basix];
-                            elements_1[i][number_variable_basix] = elements_1[i][count];
-                            elements_1[i][count] = temp_for_elements;
-                        }
-                        //меняем индексы для последующей визуализации
-                        temp_for_visual = variable_visualization[number_variable_basix];
-                        variable_visualization[number_variable_basix] = variable_visualization[count];
-                        variable_visualization[count] = temp_for_visual;
-
-                        count++;//плюс ещё одна базисная переменная
-                    }
-                    number_variable_basix++; //меняем индекс переменной
-                }
-            }
-
-            //Возвращаем количество перестановок и по совместительнству число базисных переменных
-            return count;
-        }
-
-        /// <summary>
-        /// Меняем местами столбцы для прямого хода метода Гаусса. (для обыкновенных дробей)
-        /// </summary>
-        /// <param name="elements_1">Матрица коэффициентов системы ограничений-равенств.</param>
-        /// <param name="variable_visualization">Вспомогательный массив для дальнейшего отображения переменных, который хранит индексы переменных в нужном порядке(x1,x3,x2... и другие различные комбинации).</param>
-        /// <returns>Возвращаем количество перестановок и по совместительнству число базисных переменных.</returns>
-        private int ChangeColumnsForGauss(List<List<ordinary_fraction>> elements_1, int[] variable_visualization)
-        {
-            int count = 0; //счётчик перестановок и по совместительнству число базисных переменных
-            int number_variable_basix = 0;//индекс переменной
-            ordinary_fraction temp_for_elements;
-            int temp_for_visual; //вспомогательная переменная для перестановки индексов переменных в массиве визуализации переменных
-
-            //Заполняем массив визуализации переменных. Например, для x1,x2,x3,x4 заполним [1,2,3,4].
-            for (int i = 0; i < variable_visualization.Count(); i++)
-                variable_visualization[i] = i + 1;
-
-            //перестановки в матрице и массиве визуализации
-            for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
-            {
-                if (j % 2 != 0)
-                {
-                    //находим textbox
-                    TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
-                    //вспомогательный массив(определяем верхнее число и нижнее)
-                    string[] temp = txt.Text.Split('/');
-                    //проверяем базисная ли переменная
-                    if (Int32.Parse(temp[0]) != 0)
                     {
                         //меняемся столбцами
                         for (int i = 0; i < elements_1.Count; i++)
@@ -1357,20 +1278,9 @@ namespace simplex_method
         private void CheckCanBeBasix(int index)
         {
             bool isnull = true;
-            //Для десятичных дробей.
-            if (radioButtonDecimals.IsChecked == true)
-            {
-                for (int i = 0; i < elements.Count; i++)
-                    if (elements[i][index] != 0)
-                        isnull = false;
-            }
-            //Для обыкновенных дробей.
-            else
-            {
-                for (int i = 0; i < fractions.Count; i++)
-                    if (fractions[i][index].top_number != 0)
-                        isnull = false;
-            }
+            for (int i = 0; i < elements.Count; i++)
+                if (elements[i][index] != 0)
+                    isnull = false;
             if (isnull)
                 throw new Exception("Невозможно выразить базисную переменную x" + (index + 1) + ", так как в соответствующем столбце №" + (index + 1) + " имеются только нули!");
         }
