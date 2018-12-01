@@ -65,6 +65,7 @@
     <Compile Include="ChooseDirectory.xaml.cs">
       <DependentUpon>ChooseDirectory.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DoubleToFraction.cs" />
     <Compile Include="HelpWindow.xaml.cs">
       <DependentUpon>HelpWindow.xaml</DependentUpon>
     </Compile>

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simplex_method", "simplex_m
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixLogicLibrary", "MatrixLogicLibrary\MatrixLogicLibrary.csproj", "{1AB38784-2DC5-4B80-966C-C43519247FF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConvertDouble.Tests", "TestConvertDouble.Tests\TestConvertDouble.Tests.csproj", "{D747CDC5-237B-456A-9A33-5D23A50D4948}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1AB38784-2DC5-4B80-966C-C43519247FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AB38784-2DC5-4B80-966C-C43519247FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AB38784-2DC5-4B80-966C-C43519247FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D747CDC5-237B-456A-9A33-5D23A50D4948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D747CDC5-237B-456A-9A33-5D23A50D4948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D747CDC5-237B-456A-9A33-5D23A50D4948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D747CDC5-237B-456A-9A33-5D23A50D4948}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

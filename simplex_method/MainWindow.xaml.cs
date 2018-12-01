@@ -29,10 +29,6 @@ namespace simplex_method
         public MainWindow()
         {
             InitializeComponent();
-            //textBoxDirectory.IsEnabled = false;
-            //startgrid.Children.Add(textBoxDirectory);
-            //textBoxDirectory.Margin = new Thickness(146, 364, 160, 10);
-            //textBoxDirectory.Height = 23;
             textBoxDirectory.Text = "не установлен";
             textBoxDirectory.SelectionChanged += new RoutedEventHandler(Selection_Changed);
         }
@@ -270,8 +266,8 @@ namespace simplex_method
         //кнопка "решить"
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 elements = new List<List<double>>();
 
                 //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
@@ -285,7 +281,7 @@ namespace simplex_method
                             //находим textbox
                             TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
                             //добавляем в массив число
-                            elements[i].Add(Int32.Parse(txt.Text));
+                            elements[i].Add(double.Parse(txt.Text));
                         }
                     }
                 }
@@ -354,7 +350,7 @@ namespace simplex_method
 
 
                             //создаём экземпляр окна для пошагового режима
-                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked, radioButtonDecimals.IsChecked);
                             //открываем
                             SBSSW.Show();
                             //закрываем основной
@@ -375,7 +371,7 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна
-                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked, radioButtonDecimals.IsChecked);
                         //открываем
                         SBSSW.Show();
                         //закрываем основной
@@ -406,7 +402,7 @@ namespace simplex_method
 
 
                             //создаём экземпляр окна
-                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked, radioButtonDecimals.IsChecked);
                             //открываем
                             SBSSW.Show();
                             //закрываем основной
@@ -428,7 +424,7 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна
-                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked, radioButtonDecimals.IsChecked);
                         //открываем
                         SBSSW.Show();
                         //закрываем основной
@@ -663,11 +659,11 @@ namespace simplex_method
                         this.Close();
                     }
                 }
-            }
-            catch (Exception d)
-            {
-                MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            //}
+            //catch (Exception d)
+            //{
+            //    MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //}
         }
 
         /// <summary>

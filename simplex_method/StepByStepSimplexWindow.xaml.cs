@@ -70,11 +70,15 @@ namespace simplex_method
         /// <summary>
         /// Угловая точка соответствующая решению.
         /// </summary>
-        Grid corner_dot=new Grid();
+        Grid corner_dot = new Grid();
         /// <summary>
         /// Угловая точка соответствующая решению была уже нарисована.
         /// </summary>
-        bool corner_dot_was_added=false;
+        bool corner_dot_was_added = false;
+        /// <summary>
+        /// Десятичные(true) или обыкновенные(false) дроби.
+        /// </summary>
+        bool? decimal_or_simple;
 
         /// <summary>
         /// Конструктор для окна выполнения пошагового симплекс-метода.
@@ -85,7 +89,7 @@ namespace simplex_method
         /// <param name="variable_visualization">Вспомогательный массив для визуализации переменных(по типу x1,x2,x3 и т.д.).</param>
         /// <param name="number_of_permutations">Количество базисных переменных.</param>
         /// <param name="target_function_elements">Коэффициенты целевой функции.</param>
-        public StepByStepSimplexWindow(List<List<double>> elements, int selected_number_of_rows, int selected_number_of_columns, int[] variable_visualization, int number_of_permutations, double[] target_function_elements, int MinMax, bool? CornerDot)
+        public StepByStepSimplexWindow(List<List<double>> elements, int selected_number_of_rows, int selected_number_of_columns, int[] variable_visualization, int number_of_permutations, double[] target_function_elements, int MinMax, bool? CornerDot, bool? decimal_or_simple)
         {
             InitializeComponent();
             //переносим заполненный массив с главного окна
@@ -106,6 +110,8 @@ namespace simplex_method
             this.MinMax = MinMax;
             //Была ли введена угловая точка(false - нет, true - да).
             this.CornerDot = CornerDot;
+            //десятичные или обыкновенные
+            this.decimal_or_simple = decimal_or_simple;
             //настройка количества строк и столбцов матрицы
             SimplexTable.SettingMatrix(selected_number_of_rows, selected_number_of_columns, gaussgrid);
             //отрисовка закруглённых скобок матрицы и вертикальной черты, отделяющей столбец свободных членов
@@ -148,8 +154,6 @@ namespace simplex_method
                 myLine.X2 = 6;
                 myLine.Y1 = 0;
                 myLine.Y2 = 30;
-                //myLine.Name = "line" + i + 0;
-                //RegisterName(myLine.Name, myLine);
                 Grid.SetColumn(myLine, 0);
                 Grid.SetRow(myLine, i);
                 gaussgrid.Children.Add(myLine);
@@ -188,8 +192,8 @@ namespace simplex_method
             {
                 Line myLine = new Line();
                 myLine.Stroke = Brushes.Black;
-                myLine.X1 = 31;
-                myLine.X2 = 31;
+                myLine.X1 = 50;
+                myLine.X2 = 50;
                 myLine.Y1 = 30;
                 myLine.Y2 = 0;
                 //myLine.Name = "secondline" + i + (gaussgrid.ColumnDefinitions.Count - 1);
@@ -202,8 +206,8 @@ namespace simplex_method
             //отрисовка закругления в правом верхнем углу
             PathGeometry pathGeometry2 = new PathGeometry();
             PathFigure figure2 = new PathFigure();
-            figure2.StartPoint = new Point(24, 0);
-            figure2.Segments.Add(new ArcSegment(new Point(31, 30), new Size(55, 45), -45, false, SweepDirection.Clockwise, true));
+            figure2.StartPoint = new Point(43, 0);
+            figure2.Segments.Add(new ArcSegment(new Point(50, 30), new Size(55, 45), -45, false, SweepDirection.Clockwise, true));
             pathGeometry2.Figures.Add(figure2);
             Path path2 = new Path();
             path2.Data = pathGeometry2;
@@ -215,8 +219,8 @@ namespace simplex_method
             //отрисовка закругления в правом нижнем углу
             PathGeometry pathGeometry3 = new PathGeometry();
             PathFigure figure3 = new PathFigure();
-            figure3.StartPoint = new Point(31, 0);
-            figure3.Segments.Add(new ArcSegment(new Point(24, 30), new Size(55, 45), -45, false, SweepDirection.Clockwise, true));
+            figure3.StartPoint = new Point(50, 0);
+            figure3.Segments.Add(new ArcSegment(new Point(43, 30), new Size(55, 45), -45, false, SweepDirection.Clockwise, true));
             pathGeometry3.Figures.Add(figure3);
             Path path3 = new Path();
             path3.Data = pathGeometry3;
@@ -265,9 +269,12 @@ namespace simplex_method
                 for (int j = 0; j < gaussgrid.ColumnDefinitions.Count; j++)
                 {
                     Label variable = new Label();
-                    variable.Content = elements[i - 1][j];
-                    variable.Width = 35;
-                    width += 35;
+                    if (decimal_or_simple == true)
+                        variable.Content = elements[i - 1][j];
+                    else
+                        variable.Content = DoubleToFraction.Convert(elements[i - 1][j]);
+                    variable.Width = 55;
+                    width += 55;
                     variable.Height = 30;
                     variable.HorizontalContentAlignment = HorizontalAlignment.Center;
                     variable.Name = "gausslabel" + i + "_" + j;
@@ -294,7 +301,10 @@ namespace simplex_method
                 {
                     //находим label
                     Label lbl = (Label)gaussgrid.FindName("gausslabel" + i + "_" + j);
-                    lbl.Content = elements[i - 1][j];
+                    if (decimal_or_simple == true)
+                        lbl.Content = elements[i - 1][j];
+                    else
+                        lbl.Content = DoubleToFraction.Convert(elements[i - 1][j]);
                 }
             }
         }

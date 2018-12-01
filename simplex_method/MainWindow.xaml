@@ -145,7 +145,7 @@
 
         </Menu>
         <Label x:Name="labelLastFile" Content="" HorizontalAlignment="Left" Margin="37,0,0,27" VerticalAlignment="Bottom"/>
-        <!--<TextBox x:Name="textBox" Margin="174,322,155,0" TextWrapping="Wrap" Text="TextBox" Height="23" VerticalAlignment="Top"/>-->
-        <!--<Label x:Name="labelNowDrectory" Content="Текущая директория: " HorizontalAlignment="Left" Margin="211,354,0,0" VerticalAlignment="Top"/>-->
+        <RadioButton x:Name="radioButtonDecimals" Content="Десятичные дроби" HorizontalAlignment="Left" Margin="37,214,0,0" VerticalAlignment="Top"/>
+        <RadioButton x:Name="radioButtonSimpleFractions" Content="Обыкновенные дроби" HorizontalAlignment="Left" Margin="37,234,0,0" VerticalAlignment="Top" IsChecked="True"/>
     </Grid>
 </Window>
