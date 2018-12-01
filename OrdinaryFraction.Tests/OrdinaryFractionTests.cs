@@ -14,9 +14,9 @@ namespace OrdinaryFraction.Tests
         public void OperatorDivision()
         {
             //arrange
-            ordinary_fraction of1 = "5/6";
+            ordinary_fraction of1 = "-10/12";
             ordinary_fraction of2 = "4/3";
-            ordinary_fraction expected = "5/8"; //ожидаемое значение
+            ordinary_fraction expected = "-5/8"; //ожидаемое значение
 
             //act
             ordinary_fraction actual = of1 / of2; //наблюдаемое значение
@@ -56,6 +56,22 @@ namespace OrdinaryFraction.Tests
 
             //act
             ordinary_fraction actual = of1 - of2; //наблюдаемое значение
+
+            //assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Тестирование наибольшего общего делителя.
+        /// </summary>
+        [TestMethod]
+        public void GreatestCommonDivisor()
+        {
+            //arrange
+            int expected = 2; //ожидаемое значение
+
+            //act
+            int actual = ordinary_fraction.GreatestCommonDivisor(0,2); //наблюдаемое значение
 
             //assert
             Assert.AreEqual(expected, actual);
