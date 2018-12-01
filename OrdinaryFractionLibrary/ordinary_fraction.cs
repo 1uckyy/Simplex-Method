@@ -61,34 +61,8 @@ namespace OrdinaryFractionLibrary
         /// <summary>
         /// Деление.
         /// </summary>
-        public static ordinary_fraction operator /(ordinary_fraction of1, ordinary_fraction of2)//не обрабатывается деление на ноль
+        public static ordinary_fraction operator /(ordinary_fraction of1, ordinary_fraction of2)
         {
-            //конечный знак результата плюс
-            sbyte sign=1;
-            //если оба числа отрицательны, то теперь они положительны
-            if (of1.top_number < 0 && of2.top_number < 0)
-            {
-                //теперь они положительны
-                of1.top_number *= (-1);
-                of2.top_number *= (-1);
-            }
-            //если первое число отрицательно, а второе положительно
-            else if(of1.top_number<0 && of2.top_number>0)
-            {
-                //теперь первое число положительно(необходимо для вычисления)
-                of1.top_number *= (-1);
-                //конечный знак результата минус
-                sign = -1;
-            }
-            //если первое число положительно, а второе отрицательно
-            else if (of1.top_number >= 0 && of2.top_number < 0)
-            {
-                //теперь второе число положительно(необходимо для вычисления)
-                of2.top_number *= (-1);
-                //конечный знак результата минус
-                sign = -1;
-            }
-
             //вычисления согласно оператору
             int top_new_number = of1.top_number * of2.bottom_number;
             int bottom_new_number = of1.bottom_number * of2.top_number;
@@ -100,7 +74,7 @@ namespace OrdinaryFractionLibrary
             top_new_number /= nod;
             bottom_new_number /= nod;
 
-            return new ordinary_fraction { fraction = sign*top_new_number + "/" + bottom_new_number, top_number = sign*top_new_number, bottom_number = bottom_new_number};
+            return new ordinary_fraction { fraction = top_new_number + "/" + bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number};
         }
 
         /// <summary>
@@ -108,31 +82,6 @@ namespace OrdinaryFractionLibrary
         /// </summary>
         public static ordinary_fraction operator *(ordinary_fraction of1, ordinary_fraction of2)
         {
-            sbyte sign = 1;
-            //если оба числа отрицательны, то теперь они положительны
-            if (of1.top_number < 0 && of2.top_number < 0)
-            {
-                //теперь они положительны
-                of1.top_number *= (-1);
-                of2.top_number *= (-1);
-            }
-            //если первое число отрицательно, а второе положительно
-            else if (of1.top_number < 0 && of2.top_number >= 0)
-            {
-                //теперь первое число положительно(необходимо для вычисления)
-                of1.top_number *= (-1);
-                //конечный знак результата минус
-                sign = -1;
-            }
-            //если первое число положительно, а второе отрицательно
-            else if (of1.top_number >= 0 && of2.top_number < 0)
-            {
-                //теперь второе число положительно(необходимо для вычисления)
-                of2.top_number *= (-1);
-                //конечный знак результата минус
-                sign = -1;
-            }
-
             //вычисления согласно оператору
             int top_new_number = of1.top_number * of2.top_number;
             int bottom_new_number = of1.bottom_number * of2.bottom_number;
@@ -144,7 +93,7 @@ namespace OrdinaryFractionLibrary
             top_new_number /= nod;
             bottom_new_number /= nod;
 
-            return new ordinary_fraction { fraction = sign*top_new_number + "/" + bottom_new_number, top_number = sign*top_new_number, bottom_number = bottom_new_number};
+            return new ordinary_fraction { fraction = top_new_number + "/" + bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number};
         }
 
         /// <summary>
