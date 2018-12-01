@@ -70,11 +70,11 @@ namespace simplex_method
         /// <summary>
         /// Угловая точка соответствующая решению.
         /// </summary>
-        Grid corner_dot=new Grid();
+        Grid corner_dot = new Grid();
         /// <summary>
         /// Угловая точка соответствующая решению была уже нарисована.
         /// </summary>
-        bool corner_dot_was_added=false;
+        bool corner_dot_was_added = false;
 
         /// <summary>
         /// Конструктор для окна выполнения пошагового симплекс-метода.
@@ -265,7 +265,10 @@ namespace simplex_method
                 for (int j = 0; j < gaussgrid.ColumnDefinitions.Count; j++)
                 {
                     Label variable = new Label();
-                    variable.Content = elements[i - 1][j];
+                    if (decimals_or_simple == true)
+                        variable.Content = elements[i - 1][j];
+                    else
+                        variable.Content = fractions[i - 1][j];
                     variable.Width = 35;
                     width += 35;
                     variable.Height = 30;
@@ -304,9 +307,6 @@ namespace simplex_method
         /// </summary>
         private void UpdateVisualVariables()
         {
-            ////буферизируем
-            //buffer_variable_visualization = variable_visualization;
-
             for (int j = 0; j < gaussgrid.ColumnDefinitions.Count - 1; j++)
             {
                 //находим label

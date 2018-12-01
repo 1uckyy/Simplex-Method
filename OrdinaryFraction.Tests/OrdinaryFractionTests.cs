@@ -14,7 +14,7 @@ namespace OrdinaryFraction.Tests
         public void OperatorDivision()
         {
             //arrange
-            ordinary_fraction of1 = "-10/12";
+            ordinary_fraction of1 = "85454/10000";
             ordinary_fraction of2 = "4/3";
             ordinary_fraction expected = "-5/8"; //ожидаемое значение
 

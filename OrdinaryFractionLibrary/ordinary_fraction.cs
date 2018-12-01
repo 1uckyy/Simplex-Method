@@ -206,7 +206,10 @@ namespace OrdinaryFractionLibrary
         /// <returns>Возвращает значение.</returns>
         public override string ToString()
         {
-            return fraction;
+            if (this.bottom_number != 1)
+                return fraction;
+            else
+                return top_number.ToString();
         }
     }
 }
