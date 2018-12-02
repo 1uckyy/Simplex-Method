@@ -55,9 +55,13 @@ namespace simplex_method
         /// Угловая точка соответствующая решению.
         /// </summary>
         Grid corner_dot;
+        /// <summary>
+        /// Десятичные(true) или обыкновенные(false) дроби.
+        /// </summary>
+        bool? decimal_or_simple;
 
 
-        public AutoModeSimplexTable(List<List<double>> elements, bool? CornerDot, int[] variable_visualization, int number_of_basix, double[] target_function_elements, int MinMax)
+        public AutoModeSimplexTable(List<List<double>> elements, bool? CornerDot, int[] variable_visualization, int number_of_basix, double[] target_function_elements, int MinMax, bool? decimal_or_simple)
         {
             InitializeComponent();
             //переносим заполненный массив с главного окна
@@ -74,6 +78,8 @@ namespace simplex_method
             this.target_function_elements = target_function_elements;
             //Ищем минимум или максимум(0-минимум,1-максимум).
             this.MinMax = MinMax;
+            //Десятичные(true) или обыкновенные(false) дроби.
+            this.decimal_or_simple = decimal_or_simple;
 
             //Процесс выполнения.
             Implementation();

@@ -476,7 +476,7 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                         //открываем
                         AMST.Show();
                         //закрываем основной
@@ -496,7 +496,7 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                         //открываем
                         AMST.Show();
                         //закрываем основной
@@ -523,7 +523,7 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                         //открываем
                         AMST.Show();
                         //закрываем основной
@@ -544,7 +544,7 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                         //открываем
                         AMST.Show();
                         //закрываем основной

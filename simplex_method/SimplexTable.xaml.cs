@@ -745,6 +745,7 @@ namespace simplex_method
                     //для десятичных
                     if (decimal_or_simple == true)
                         lbl.Content = Math.Round(simplex_elements[i - 1][j - 1], 2);
+                    //для обыкновенных
                     else
                         lbl.Content = DoubleToFraction.Convert(simplex_elements[i - 1][j - 1]);
                 }
