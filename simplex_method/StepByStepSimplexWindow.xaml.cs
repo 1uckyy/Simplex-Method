@@ -269,8 +269,10 @@ namespace simplex_method
                 for (int j = 0; j < gaussgrid.ColumnDefinitions.Count; j++)
                 {
                     Label variable = new Label();
+                    //для десятичных
                     if (decimal_or_simple == true)
                         variable.Content = elements[i - 1][j];
+                    //для обыкновенных
                     else
                         variable.Content = DoubleToFraction.Convert(elements[i - 1][j]);
                     variable.Width = 55;
@@ -301,8 +303,10 @@ namespace simplex_method
                 {
                     //находим label
                     Label lbl = (Label)gaussgrid.FindName("gausslabel" + i + "_" + j);
+                    //для десятичных
                     if (decimal_or_simple == true)
-                        lbl.Content = elements[i - 1][j];
+                        lbl.Content = Math.Round(elements[i - 1][j], 2);
+                    //для обыкновенных
                     else
                         lbl.Content = DoubleToFraction.Convert(elements[i - 1][j]);
                 }
@@ -602,4 +606,3 @@ namespace simplex_method
 
     }
 }
-

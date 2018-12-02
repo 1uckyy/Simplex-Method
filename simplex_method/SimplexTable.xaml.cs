@@ -63,6 +63,10 @@ namespace simplex_method
         /// Симплекс-метод(true) или метод искусственного базиса(false).
         /// </summary>
         bool? simplex_or_artificial;
+        /// <summary>
+        /// Десятичные(true) или обыкновенные(false) дроби.
+        /// </summary>
+        bool? decimal_or_simple=false;//передавать значение после конца тестирования
 
 
         public SimplexTable(int number_of_permutations, int number_of_free_variables, int[] variable_visualization, List<List<double>> elements, double[] target_function_elements, bool? simplex_or_artificial)
@@ -411,10 +415,22 @@ namespace simplex_method
                 for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
                 {
                     Label variable = new Label();
-                    if (simplex_or_artificial == true)
-                        variable.Content = Math.Round(elements[i - 1][(number_of_permutations - 1) + j], 2);
+                    //для десятичных
+                    if (decimal_or_simple == true)
+                    {
+                        if (simplex_or_artificial == true)
+                            variable.Content = Math.Round(elements[i - 1][(number_of_permutations - 1) + j], 2);
+                        else
+                            variable.Content = Math.Round(elements[i - 1][j - 1], 2);
+                    }
+                    //для обыкновенных
                     else
-                        variable.Content = Math.Round(elements[i - 1][j - 1], 2);
+                    {
+                        if (simplex_or_artificial == true)
+                            variable.Content = DoubleToFraction.Convert(elements[i - 1][(number_of_permutations - 1) + j]);
+                        else
+                            variable.Content = DoubleToFraction.Convert(elements[i - 1][j - 1]);
+                    }
                     variable.Width = 35;
                     variable.Height = 30;
                     variable.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -446,7 +462,12 @@ namespace simplex_method
 
                     //отображение
                     Label variable1 = new Label();
-                    variable1.Content = Math.Round(a, 2);
+                    //для десятичных
+                    if (decimal_or_simple == true)
+                        variable1.Content = Math.Round(a, 2);
+                    //для обыкновенных
+                    else
+                        variable1.Content = DoubleToFraction.Convert(a);
                     variable1.Width = 35;
                     variable1.Height = 30;
                     variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -465,7 +486,12 @@ namespace simplex_method
                 for (int i = 0; i < elements.Count; i++)
                     a += elements[i][elements[0].Count - 1] * target_function_elements[variable_visualization[i] - 1];
                 Label variable2 = new Label();
-                variable2.Content = Math.Round(a, 2) * (-1);
+                //для десятичных
+                if (decimal_or_simple == true)
+                    variable2.Content = Math.Round(a, 2) * (-1);
+                //для обыкновенных
+                else
+                    variable2.Content = DoubleToFraction.Convert(a * (-1));
                 variable2.Width = 35;
                 variable2.Height = 30;
                 variable2.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -505,7 +531,12 @@ namespace simplex_method
 
                     //отображение
                     Label variable1 = new Label();
-                    variable1.Content = Math.Round(a * (-1), 2);
+                    //для десятичных
+                    if (decimal_or_simple == true)
+                        variable1.Content = Math.Round(a * (-1), 2);
+                    //для обыкновенных
+                    else
+                        variable1.Content = DoubleToFraction.Convert(a * (-1));
                     variable1.Width = 35;
                     variable1.Height = 30;
                     variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -683,7 +714,11 @@ namespace simplex_method
                 {
                     //находим label
                     Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
-                    lbl.Content = Math.Round(simplex_elements[i - 1][j - 1], 2);
+                    //для десятичных
+                    if (decimal_or_simple == true)
+                        lbl.Content = Math.Round(simplex_elements[i - 1][j - 1], 2);
+                    else
+                        lbl.Content = DoubleToFraction.Convert(simplex_elements[i - 1][j - 1]);
                 }
             }
         }
