@@ -163,7 +163,7 @@ namespace simplex_method
             if (simplextable1.ResponseCheck() == 1)
             {
                 if (MinMax == 0)
-                    labelanswer.Content = "Ответ :" + simplextable1.Response() * (-1);
+                    labelanswer.Content = "Ответ :-" + simplextable1.Response();
                 else labelanswer.Content = "Ответ :" + simplextable1.Response();
                 //добавляем точку
                 corner_dot = simplextable1.ResponseCornerDot(step);

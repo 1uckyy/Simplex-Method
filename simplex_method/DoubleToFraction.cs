@@ -27,7 +27,6 @@ namespace simplex_method
             }
             else
             {
-
                 //определяем знак
                 sbyte sign = 1;
                 if (elem < 0)

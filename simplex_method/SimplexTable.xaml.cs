@@ -516,7 +516,7 @@ namespace simplex_method
                 else
                     variable2.Content = DoubleToFraction.Convert(a * (-1));
                 //добавляем число в рабочий массив
-                simplex_elements[simplex_elements.Count - 1].Add(a*(-1));
+                simplex_elements[simplex_elements.Count - 1].Add(a * (-1));
                 variable2.Width = 55;
                 variable2.Height = 30;
                 variable2.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -565,7 +565,7 @@ namespace simplex_method
                     else
                         variable1.Content = DoubleToFraction.Convert(a * (-1));
                     //добавляем число в рабочий массив
-                    simplex_elements[simplex_elements.Count - 1].Add(a*(-1));
+                    simplex_elements[simplex_elements.Count - 1].Add(a * (-1));
                     variable1.Width = 55;
                     variable1.Height = 30;
                     variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -1102,9 +1102,12 @@ namespace simplex_method
         /// <summary>
         /// Ответ задачи.
         /// </summary>
-        public double Response()
+        public string Response()
         {
-            return simplex_elements[simplex_elements.Count - 1][simplex_elements[0].Count - 1];
+            if (decimal_or_simple == true)
+                return simplex_elements[simplex_elements.Count - 1][simplex_elements[0].Count - 1].ToString();
+            else
+                return DoubleToFraction.Convert(simplex_elements[simplex_elements.Count - 1][simplex_elements[0].Count - 1]);
         }
 
         /// <summary>
@@ -1151,7 +1154,11 @@ namespace simplex_method
                 {
                     //создаём новый label
                     Label txt = new Label();
-                    txt.Content = Math.Round(finish_corner_dot[index_basix], 2).ToString();
+                    //для десятичных дробей
+                    if (decimal_or_simple == true)
+                        txt.Content = Math.Round(finish_corner_dot[index_basix], 2).ToString();
+                    else
+                        txt.Content = DoubleToFraction.Convert(finish_corner_dot[index_basix]);
                     width += 33;
                     txt.Height = 30;
                     txt.Width = 33;

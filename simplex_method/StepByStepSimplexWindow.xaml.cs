@@ -431,7 +431,7 @@ namespace simplex_method
                         case 1:
                             step++;
                             if (MinMax == 0)
-                                labelsteps.Content = "Ответ :" + simplextable.Response() * (-1);
+                                labelsteps.Content = "Ответ :-" + simplextable.Response();
                             else labelsteps.Content = "Ответ :" + simplextable.Response();
                             if (corner_dot_was_added == false)
                             {
@@ -485,7 +485,7 @@ namespace simplex_method
                             case 1:
                                 step++;
                                 if (MinMax == 0)
-                                    labelsteps.Content = "Ответ :" + simplextable.Response() * (-1);
+                                    labelsteps.Content = "Ответ :-" + simplextable.Response();
                                 else labelsteps.Content = "Ответ :" + simplextable.Response();
                                 //если не была добавлена, то добавляем
                                 if (corner_dot_was_added == false)
