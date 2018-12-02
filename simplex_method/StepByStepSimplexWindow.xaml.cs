@@ -415,7 +415,7 @@ namespace simplex_method
                     scrollgaussgrid.Visibility = Visibility.Hidden;
                     if (simplex_table_was_draw == false)
                     {
-                        simplextable = new SimplexTable(number_of_permutations, number_of_free_variables, variable_visualization, elements, target_function_elements, true);
+                        simplextable = new SimplexTable(number_of_permutations, number_of_free_variables, variable_visualization, elements, target_function_elements, true, decimal_or_simple);
                         MainGrid.Children.Add(simplextable);
                         //Симплекс-таблица была создана
                         simplex_table_was_draw = true;

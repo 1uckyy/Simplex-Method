@@ -577,7 +577,7 @@ namespace simplex_method
 
 
                             //создаём экземпляр окна
-                            StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                            StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                             //открываем
                             SBABW.Show();
                             //закрываем основной
@@ -599,7 +599,7 @@ namespace simplex_method
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
-                        StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                         SBABW.Show();
                         this.Close();
                     }
@@ -629,7 +629,7 @@ namespace simplex_method
                             FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                             //создаём экземпляр окна для автоматического режима
-                            AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                            AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                             //открываем
                             AMAB.Show();
                             //закрываем основной
@@ -652,7 +652,7 @@ namespace simplex_method
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeArtificialBasis AMAB = new AutoModeArtificialBasis(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex, radioButtonDecimals.IsChecked);
                         //открываем
                         AMAB.Show();
                         //закрываем основной

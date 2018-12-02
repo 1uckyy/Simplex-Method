@@ -73,8 +73,12 @@ namespace simplex_method
         /// Угловая точка соответствующая решению была уже нарисована.
         /// </summary>
         bool corner_dot_was_added = false;
+        /// <summary>
+        /// Десятичные(true) или обыкновенные(false) дроби.
+        /// </summary>
+        bool? decimal_or_simple;
 
-        public StepByStepArtificialBasisWindow(List<List<double>> elements, int number_of_basix, int[] variable_visualization, double[] target_function_elements, int MinMax)
+        public StepByStepArtificialBasisWindow(List<List<double>> elements, int number_of_basix, int[] variable_visualization, double[] target_function_elements, int MinMax, bool? decimal_or_simple)
         {
             InitializeComponent();
             //Матрица коэффициентов системы ограничений-равенств.
@@ -92,6 +96,7 @@ namespace simplex_method
             memory = false;
             simplex_table_was_draw = false;
             this.MinMax = MinMax;
+            this.decimal_or_simple = decimal_or_simple;
 
             //Процесс выполнения.
             Implementation();
@@ -103,7 +108,7 @@ namespace simplex_method
         private void Implementation()
         {
             //создаём сиплекс-таблицу
-            simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, false);
+            simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, false, decimal_or_simple);
             MainGrid.Children.Add(simplextable);
             //добавляем тильду
             simplextable.AddTilde();
@@ -200,7 +205,7 @@ namespace simplex_method
                         step++;
                         if (simplex_table_was_draw == false)
                         {
-                            simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, elements, target_function_elements, true);
+                            simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, elements, target_function_elements, true,decimal_or_simple);
                             MainGrid.Children.Add(simplextable1);
                             //Симплекс-таблица была создана
                             simplex_table_was_draw = true;

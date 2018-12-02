@@ -55,7 +55,12 @@ namespace simplex_method
         /// Угловая точка соответствующая решению.
         /// </summary>
         Grid corner_dot = new Grid();
-        public AutoModeArtificialBasis(List<List<double>> elements, int number_of_basix, int[] variable_visualization, double[] target_function_elements, int MinMax)
+        /// <summary>
+        /// Десятичные(true) или обыкновенные(false) дроби.
+        /// </summary>
+        bool? decimal_or_simple;
+
+        public AutoModeArtificialBasis(List<List<double>> elements, int number_of_basix, int[] variable_visualization, double[] target_function_elements, int MinMax, bool? decimal_or_simple)
         {
             InitializeComponent();
 
@@ -70,6 +75,7 @@ namespace simplex_method
             //Коэффициенты целевой функции.
             this.target_function_elements = target_function_elements;
             this.MinMax = MinMax;
+            this.decimal_or_simple = decimal_or_simple;
 
             //Процесс выполнения.
             Implementation();
@@ -78,7 +84,7 @@ namespace simplex_method
         private void Implementation()
         {
             //создаём сиплекс-таблицу
-            simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, false);
+            simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, false, decimal_or_simple);
             MainGrid.Children.Add(simplextable);
             //добавляем тильду
             simplextable.AddTilde();
@@ -137,7 +143,7 @@ namespace simplex_method
             elements = temp_elements;
 
             simplextable.HideSimplexTable();
-            simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, elements, target_function_elements, true);
+            simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, elements, target_function_elements, true, decimal_or_simple);
             MainGrid.Children.Add(simplextable1);
 
             step = 0;

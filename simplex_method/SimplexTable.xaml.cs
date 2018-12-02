@@ -66,10 +66,10 @@ namespace simplex_method
         /// <summary>
         /// Десятичные(true) или обыкновенные(false) дроби.
         /// </summary>
-        bool? decimal_or_simple=false;//передавать значение после конца тестирования
+        bool? decimal_or_simple;//передавать значение после конца тестирования
 
 
-        public SimplexTable(int number_of_permutations, int number_of_free_variables, int[] variable_visualization, List<List<double>> elements, double[] target_function_elements, bool? simplex_or_artificial)
+        public SimplexTable(int number_of_permutations, int number_of_free_variables, int[] variable_visualization, List<List<double>> elements, double[] target_function_elements, bool? simplex_or_artificial, bool? decimal_or_simple)
         {
             InitializeComponent();
             this.number_of_permutations = number_of_permutations;
@@ -78,6 +78,7 @@ namespace simplex_method
             this.elements = elements;
             this.target_function_elements = target_function_elements;
             this.simplex_or_artificial = simplex_or_artificial;
+            this.decimal_or_simple = decimal_or_simple;
             DrawSimplexTable();
         }
 

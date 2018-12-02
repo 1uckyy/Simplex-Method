@@ -97,7 +97,7 @@ namespace simplex_method
             MatrixTransformation.HoistingMatrix(elements, number_of_basix);
 
             //создаём сиплекс-таблицу
-            simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, true);
+            simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, true, decimal_or_simple);
             MainGrid.Children.Add(simplextable);
 
             int responce;
