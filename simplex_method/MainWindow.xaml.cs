@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace simplex_method
 {
@@ -268,6 +269,45 @@ namespace simplex_method
         {
             try
             {
+                //для обыкновенных дробей дополнительная проверка
+                if(radioButtonDecimals.IsChecked == false)
+                {
+                    //шаблон
+                    string pattern = @"[0-9]+/[0-9]+";
+
+                    string pattern1 = @"[0-9]+.[0-9]+";
+
+                    //проверяем по шаблону
+                    for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
+                    {
+                        for (int j = 0; j < entergrid.ColumnDefinitions.Count; j++)
+                        {
+                            if (j % 2 == 0)
+                            {
+                                //находим textbox
+                                TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
+                                //если это дробь, то обрабатываем её
+                                if (Regex.IsMatch(txt.Text, pattern) == true)
+                                {
+                                    string[] str = txt.Text.Split('/');
+
+                                    if(Int32.Parse(str[1])==0)
+                                    {
+                                        throw new Exception("Деление на ноль: "+txt.Text);
+                                    }
+
+                                    txt.Text = ((double)Int32.Parse(str[0]) / Int32.Parse(str[1])).ToString();
+
+                                    Regex.Replace(txt.Text, ",", ".");
+                                }
+
+                                if (Regex.IsMatch(txt.Text, pattern1) == true)
+                                    throw new Exception("Десятичная дробь: " + txt.Text);
+                            }
+                        }
+                    }
+                }
+
                 elements = new List<List<double>>();
 
                 //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
