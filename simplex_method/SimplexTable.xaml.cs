@@ -412,6 +412,8 @@ namespace simplex_method
             //заполняем основное поле
             for (int i = 1; i < simplextablegrid.RowDefinitions.Count - 1; i++)
             {
+                //новая строка рабочего массива
+                simplex_elements.Add(new List<double>());
                 for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
                 {
                     Label variable = new Label();
@@ -419,17 +421,33 @@ namespace simplex_method
                     if (decimal_or_simple == true)
                     {
                         if (simplex_or_artificial == true)
+                        {
                             variable.Content = Math.Round(elements[i - 1][(number_of_permutations - 1) + j], 2);
+                            //добавляем число в рабочий массив
+                            simplex_elements[i - 1].Add(elements[i - 1][(number_of_permutations - 1) + j]);
+                        }
                         else
+                        {
                             variable.Content = Math.Round(elements[i - 1][j - 1], 2);
+                            //добавляем число в рабочий массив
+                            simplex_elements[i - 1].Add(elements[i - 1][j - 1]);
+                        }
                     }
                     //для обыкновенных
                     else
                     {
                         if (simplex_or_artificial == true)
+                        {
                             variable.Content = DoubleToFraction.Convert(elements[i - 1][(number_of_permutations - 1) + j]);
+                            //добавляем число в рабочий массив
+                            simplex_elements[i - 1].Add(elements[i - 1][(number_of_permutations - 1) + j]);
+                        }
                         else
+                        {
                             variable.Content = DoubleToFraction.Convert(elements[i - 1][j - 1]);
+                            //добавляем число в рабочий массив
+                            simplex_elements[i - 1].Add(elements[i - 1][j - 1]);
+                        }
                     }
                     variable.Width = 35;
                     variable.Height = 30;
@@ -446,6 +464,8 @@ namespace simplex_method
             //для сиплекс метода
             if (simplex_or_artificial == true)
             {
+                //новая строка рабочего массива
+                simplex_elements.Add(new List<double>());
                 //коэффициенты последней строки
                 double a;
                 //счёт столбца
@@ -468,6 +488,8 @@ namespace simplex_method
                     //для обыкновенных
                     else
                         variable1.Content = DoubleToFraction.Convert(a);
+                    //добавляем число в рабочий массив
+                    simplex_elements[simplex_elements.Count - 1].Add(a);
                     variable1.Width = 35;
                     variable1.Height = 30;
                     variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -492,6 +514,8 @@ namespace simplex_method
                 //для обыкновенных
                 else
                     variable2.Content = DoubleToFraction.Convert(a * (-1));
+                //добавляем число в рабочий массив
+                simplex_elements[simplex_elements.Count - 1].Add(a*(-1));
                 variable2.Width = 35;
                 variable2.Height = 30;
                 variable2.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -502,22 +526,24 @@ namespace simplex_method
                 Grid.SetRow(variable2, simplextablegrid.RowDefinitions.Count - 1);
                 simplextablegrid.Children.Add(variable2);
 
-                //заполняем рабочий массив
-                for (int i = 1; i < simplextablegrid.RowDefinitions.Count; i++)
-                {
-                    simplex_elements.Add(new List<double>());
-                    for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
-                    {
-                        //находим label
-                        Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
-                        //добавляем в массив число
-                        simplex_elements[i - 1].Add(double.Parse(lbl.Content.ToString()));
-                    }
-                }
+                ////заполняем рабочий массив
+                //for (int i = 1; i < simplextablegrid.RowDefinitions.Count; i++)
+                //{
+                //    simplex_elements.Add(new List<double>());
+                //    for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
+                //    {
+                //        //находим label
+                //        Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
+                //        //добавляем в массив число
+                //        simplex_elements[i - 1].Add(double.Parse(lbl.Content.ToString()));
+                //    }
+                //}
             }
             //для искусственного базиса
             else
             {
+                //новая строка рабочего массива
+                simplex_elements.Add(new List<double>());
                 //коэффициенты последней строки
                 double a;
                 for (int j = 0; j < elements[0].Count; j++)
@@ -537,6 +563,8 @@ namespace simplex_method
                     //для обыкновенных
                     else
                         variable1.Content = DoubleToFraction.Convert(a * (-1));
+                    //добавляем число в рабочий массив
+                    simplex_elements[simplex_elements.Count - 1].Add(a*(-1));
                     variable1.Width = 35;
                     variable1.Height = 30;
                     variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -548,18 +576,18 @@ namespace simplex_method
                     simplextablegrid.Children.Add(variable1);
                 }
 
-                //заполняем рабочий массив
-                for (int i = 1; i < simplextablegrid.RowDefinitions.Count; i++)
-                {
-                    simplex_elements.Add(new List<double>());
-                    for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
-                    {
-                        //находим label
-                        Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
-                        //добавляем в массив число
-                        simplex_elements[i - 1].Add(double.Parse(lbl.Content.ToString()));
-                    }
-                }
+                ////заполняем рабочий массив
+                //for (int i = 1; i < simplextablegrid.RowDefinitions.Count; i++)
+                //{
+                //    simplex_elements.Add(new List<double>());
+                //    for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count; j++)
+                //    {
+                //        //находим label
+                //        Label lbl = (Label)simplextablegrid.FindName("simplexlabel" + i + "_" + j);
+                //        //добавляем в массив число
+                //        simplex_elements[i - 1].Add(double.Parse(lbl.Content.ToString()));
+                //    }
+                //}
             }
         }
 
