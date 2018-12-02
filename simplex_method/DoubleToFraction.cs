@@ -38,6 +38,9 @@ namespace simplex_method
                 factor = "1" + factor;
 
                 //числитель
+                str[1] = str[0] + str[1];
+
+                //числитель
                 int top_number = Math.Abs(Int32.Parse(str[1]));
                 //знаменатель
                 int bottom_number = Int32.Parse(factor);

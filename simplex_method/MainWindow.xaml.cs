@@ -266,8 +266,8 @@ namespace simplex_method
         //кнопка "решить"
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
+            try
+            {
                 elements = new List<List<double>>();
 
                 //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
@@ -659,11 +659,11 @@ namespace simplex_method
                         this.Close();
                     }
                 }
-            //}
-            //catch (Exception d)
-            //{
-            //    MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //}
+            }
+            catch (Exception d)
+            {
+                MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         /// <summary>
