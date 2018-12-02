@@ -307,7 +307,7 @@ namespace simplex_method
             //X
             Label variable = new Label();
             variable.Content = "X";
-            width += 35;
+            width += 55;
             variable.Width = 35;
             height += 30;
             variable.Height = 30;
@@ -319,8 +319,8 @@ namespace simplex_method
             for (int j = 1; j < simplextablegrid.ColumnDefinitions.Count - 1; j++)
             {
                 Label variable1 = new Label();
-                variable1.Width = 35;
-                width += 35;
+                variable1.Width = 55;
+                width += 55;
                 variable1.Height = 30;
                 variable1.Content = "x" + variable_visualization[(number_of_permutations - 1) + j];
                 variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -337,7 +337,7 @@ namespace simplex_method
             for (int i = 1; i < simplextablegrid.RowDefinitions.Count - 1; i++)
             {
                 Label variable1 = new Label();
-                variable1.Width = 35;
+                variable1.Width = 55;
                 variable1.Height = 30;
                 height += 30;
                 variable1.Content = "x" + variable_visualization[i - 1];
@@ -348,7 +348,7 @@ namespace simplex_method
                 Grid.SetRow(variable1, i);
                 simplextablegrid.Children.Add(variable1);
             }
-            width += 35;
+            width += 55;
 
             simplextablegrid.Width = width;
             simplextablegrid.Height = height;
@@ -378,7 +378,7 @@ namespace simplex_method
                     Line myLine = new Line();
                     myLine.Stroke = Brushes.Black;
                     myLine.X1 = 0;
-                    myLine.X2 = 35;
+                    myLine.X2 = 55;
                     myLine.Y1 = 0;
                     myLine.Y2 = 0;
                     Grid.SetColumn(myLine, j);
@@ -449,7 +449,7 @@ namespace simplex_method
                             simplex_elements[i - 1].Add(elements[i - 1][j - 1]);
                         }
                     }
-                    variable.Width = 35;
+                    variable.Width = 55;
                     variable.Height = 30;
                     variable.HorizontalContentAlignment = HorizontalAlignment.Center;
                     variable.Name = "simplexlabel" + i + "_" + j;
@@ -490,7 +490,7 @@ namespace simplex_method
                         variable1.Content = DoubleToFraction.Convert(a);
                     //добавляем число в рабочий массив
                     simplex_elements[simplex_elements.Count - 1].Add(a);
-                    variable1.Width = 35;
+                    variable1.Width = 55;
                     variable1.Height = 30;
                     variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
                     variable1.Name = "simplexlabel" + (simplextablegrid.RowDefinitions.Count - 1) + "_" + column_index;
@@ -516,7 +516,7 @@ namespace simplex_method
                     variable2.Content = DoubleToFraction.Convert(a * (-1));
                 //добавляем число в рабочий массив
                 simplex_elements[simplex_elements.Count - 1].Add(a*(-1));
-                variable2.Width = 35;
+                variable2.Width = 55;
                 variable2.Height = 30;
                 variable2.HorizontalContentAlignment = HorizontalAlignment.Center;
                 variable2.Name = "simplexlabel" + (simplextablegrid.RowDefinitions.Count - 1) + "_" + (simplextablegrid.ColumnDefinitions.Count - 1);
@@ -565,7 +565,7 @@ namespace simplex_method
                         variable1.Content = DoubleToFraction.Convert(a * (-1));
                     //добавляем число в рабочий массив
                     simplex_elements[simplex_elements.Count - 1].Add(a*(-1));
-                    variable1.Width = 35;
+                    variable1.Width = 55;
                     variable1.Height = 30;
                     variable1.HorizontalContentAlignment = HorizontalAlignment.Center;
                     variable1.Name = "simplexlabel" + (simplextablegrid.RowDefinitions.Count - 1) + "_" + (j + 1);
