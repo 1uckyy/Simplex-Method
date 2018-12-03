@@ -1159,9 +1159,9 @@ namespace simplex_method
                         txt.Content = Math.Round(finish_corner_dot[index_basix], 2).ToString();
                     else
                         txt.Content = DoubleToFraction.Convert(finish_corner_dot[index_basix]);
-                    width += 33;
+                    width += 55;
                     txt.Height = 30;
-                    txt.Width = 33;
+                    txt.Width = 55;
                     //устанавливаем столбец
                     Grid.SetColumn(txt, j);
                     //устанавливаем строку
