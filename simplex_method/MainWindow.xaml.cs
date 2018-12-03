@@ -275,7 +275,7 @@ namespace simplex_method
                     //шаблон
                     string pattern = @"[0-9]+/[0-9]+";
 
-                    string pattern1 = @"[0-9]+.[0-9]+";
+                    string pattern1 = @"[0-9]+,[0-9]+";
 
                     //проверяем по шаблону
                     for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
@@ -286,6 +286,10 @@ namespace simplex_method
                             {
                                 //находим textbox
                                 TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
+
+                                if (Regex.IsMatch(txt.Text, pattern1) == true)
+                                    throw new Exception("Десятичная дробь: " + txt.Text);
+
                                 //если это дробь, то обрабатываем её
                                 if (Regex.IsMatch(txt.Text, pattern) == true)
                                 {
@@ -300,9 +304,6 @@ namespace simplex_method
 
                                     Regex.Replace(txt.Text, ",", ".");
                                 }
-
-                                if (Regex.IsMatch(txt.Text, pattern1) == true)
-                                    throw new Exception("Десятичная дробь: " + txt.Text);
                             }
                         }
                     }
