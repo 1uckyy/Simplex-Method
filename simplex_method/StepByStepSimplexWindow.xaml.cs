@@ -367,10 +367,20 @@ namespace simplex_method
         /// </summary>
         private void GetOutOfTheBuffer()
         {
-            for (int i = 0; i < buffer_elements[step - 1].Count; i++)
-                for (int j = 0; j < buffer_elements[step - 1][0].Count; j++)
-                    elements[i][j] = buffer_elements[step - 1][i][j];
-            buffer_elements.RemoveAt(step - 1);
+            if (MainWindow.decimals_or_simple)
+            {
+                for (int i = 0; i < buffer_elements[step - 1].Count; i++)
+                    for (int j = 0; j < buffer_elements[step - 1][0].Count; j++)
+                        elements[i][j] = buffer_elements[step - 1][i][j];
+                buffer_elements.RemoveAt(step - 1);
+            }
+            else
+            {
+                for (int i = 0; i < buffer_fractions[step - 1].Count; i++)
+                    for (int j = 0; j < buffer_fractions[step - 1][0].Count; j++)
+                        fractions[i][j] = buffer_fractions[step - 1][i][j];
+                buffer_fractions.RemoveAt(step - 1);
+            }
         }
 
         /// <summary>
@@ -426,7 +436,10 @@ namespace simplex_method
                     scrollgaussgrid.Visibility = Visibility.Hidden;
                     if (simplex_table_was_draw == false)
                     {
+                        if(MainWindow.decimals_or_simple)
                         simplextable = new SimplexTable(number_of_permutations, number_of_free_variables, variable_visualization, elements, target_function_elements, true);
+                        else
+                            simplextable = new SimplexTable(number_of_permutations, number_of_free_variables, variable_visualization, fractions, target_function_fractions, true);
                         MainGrid.Children.Add(simplextable);
                         //Симплекс-таблица была создана
                         simplex_table_was_draw = true;
@@ -442,7 +455,7 @@ namespace simplex_method
                         case 1:
                             step++;
                             if (MinMax == 0)
-                                labelsteps.Content = "Ответ :" + simplextable.Response() * (-1);
+                                labelsteps.Content = "Ответ :-" + simplextable.Response();
                             else labelsteps.Content = "Ответ :" + simplextable.Response();
                             if (corner_dot_was_added == false)
                             {
@@ -496,7 +509,7 @@ namespace simplex_method
                             case 1:
                                 step++;
                                 if (MinMax == 0)
-                                    labelsteps.Content = "Ответ :" + simplextable.Response() * (-1);
+                                    labelsteps.Content = "Ответ :-" + simplextable.Response();
                                 else labelsteps.Content = "Ответ :" + simplextable.Response();
                                 //если не была добавлена, то добавляем
                                 if (corner_dot_was_added == false)

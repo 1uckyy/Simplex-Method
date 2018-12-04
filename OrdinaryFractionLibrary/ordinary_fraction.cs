@@ -19,6 +19,10 @@ namespace OrdinaryFractionLibrary
         /// Число под чертой.
         /// </summary>
         public int bottom_number { get; set; }
+        /// <summary>
+        /// Вещественное значение.
+        /// </summary>
+        public double value { get; set; }
         ///// <summary>
         ///// Само значение.
         ///// </summary>
@@ -51,11 +55,11 @@ namespace OrdinaryFractionLibrary
                 top_new_number /= nod;
                 bottom_new_number /= nod;
 
-                return new ordinary_fraction { fraction = top_new_number+"/"+ bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number };
+                return new ordinary_fraction { fraction = top_new_number + "/" + bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number, value = (double)top_new_number / bottom_new_number };
             }
             //иначе это целое число
             else
-                return new ordinary_fraction { fraction = temp[0] + "/1", top_number = Int32.Parse(temp[0]), bottom_number = 1 };
+                return new ordinary_fraction { fraction = temp[0] + "/1", top_number = Int32.Parse(temp[0]), bottom_number = 1, value = Int32.Parse(temp[0]) };
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace OrdinaryFractionLibrary
             bottom_new_number = of1.bottom_number * of2.top_number;
 
             //конечный знак результата плюс
-            sbyte sign=1;
+            sbyte sign = 1;
             //если оба числа отрицательны, то теперь они положительны
             if (of1.top_number < 0 && of2.top_number < 0)
             {
@@ -82,7 +86,7 @@ namespace OrdinaryFractionLibrary
                 bottom_new_number *= (-1);
             }
             //если первое число отрицательно, а второе положительно
-            else if(of1.top_number<0 && of2.top_number>0)
+            else if (of1.top_number < 0 && of2.top_number > 0)
             {
                 //теперь первое число положительно(необходимо для вычисления)
                 top_new_number *= (-1);
@@ -105,7 +109,7 @@ namespace OrdinaryFractionLibrary
             top_new_number /= nod;
             bottom_new_number /= nod;
 
-            return new ordinary_fraction { fraction = sign*top_new_number + "/" + bottom_new_number, top_number = sign*top_new_number, bottom_number = bottom_new_number};
+            return new ordinary_fraction { fraction = sign * top_new_number + "/" + bottom_new_number, top_number = sign * top_new_number, bottom_number = bottom_new_number, value = ((double)top_new_number / bottom_new_number) * sign };
         }
 
         /// <summary>
@@ -147,7 +151,7 @@ namespace OrdinaryFractionLibrary
             top_new_number /= nod;
             bottom_new_number /= nod;
 
-            return new ordinary_fraction { fraction = sign*top_new_number + "/" + bottom_new_number, top_number = sign*top_new_number, bottom_number = bottom_new_number};
+            return new ordinary_fraction { fraction = sign * top_new_number + "/" + bottom_new_number, top_number = sign * top_new_number, bottom_number = bottom_new_number, value = ((double)top_new_number / bottom_new_number) * sign };
         }
 
         /// <summary>
@@ -169,7 +173,29 @@ namespace OrdinaryFractionLibrary
             top_new_number /= nod;
             bottom_new_number /= nod;
 
-            return new ordinary_fraction { fraction = top_new_number + "/" + bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number};
+            return new ordinary_fraction { fraction = top_new_number + "/" + bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number, value = (double)top_new_number / bottom_new_number};
+        }
+
+        /// <summary>
+        /// Сложение.
+        /// </summary>
+        /// <param name="of1"></param>
+        /// <param name="of2"></param>
+        /// <returns></returns>
+        public static ordinary_fraction operator +(ordinary_fraction of1, ordinary_fraction of2)
+        {
+            //вычисления согласно оператору
+            int top_new_number = (of1.top_number * of2.bottom_number) + (of2.top_number * of1.bottom_number);
+            int bottom_new_number = of1.bottom_number * of2.bottom_number;
+
+            //наибольший общий делить
+            int nod = GreatestCommonDivisor(top_new_number, bottom_new_number);
+
+            //сокращаем и числитель, и знаменатель
+            top_new_number /= nod;
+            bottom_new_number /= nod;
+
+            return new ordinary_fraction { fraction = top_new_number + "/" + bottom_new_number, top_number = top_new_number, bottom_number = bottom_new_number, value = (double)top_new_number / bottom_new_number};
         }
 
         /// <summary>
@@ -198,7 +224,7 @@ namespace OrdinaryFractionLibrary
 
             ordinary_fraction other = (ordinary_fraction)obj;
 
-            if ((this.top_number==other.top_number) && (this.bottom_number==other.bottom_number))
+            if ((this.top_number == other.top_number) && (this.bottom_number == other.bottom_number))
                 return true;
             return false;
         }
