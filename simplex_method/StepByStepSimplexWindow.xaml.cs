@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MatrixLogicLibrary;
+using OrdinaryFractionLibrary;
 
 namespace simplex_method
 {
@@ -297,7 +298,10 @@ namespace simplex_method
                 {
                     //находим label
                     Label lbl = (Label)gaussgrid.FindName("gausslabel" + i + "_" + j);
-                    lbl.Content = elements[i - 1][j];
+                    if (MainWindow.decimals_or_simple)
+                        lbl.Content = elements[i - 1][j];
+                    else
+                        lbl.Content = fractions[i - 1][j];
                 }
             }
         }
@@ -336,12 +340,25 @@ namespace simplex_method
         /// </summary>
         private void BufferingTableValues()
         {
-            buffer_elements.Add(new List<List<double>>());
-            for (int i = 0; i < elements.Count; i++)
+            if (MainWindow.decimals_or_simple)
             {
-                buffer_elements[step].Add(new List<double>());
-                for (int j = 0; j < elements[0].Count; j++)
-                    buffer_elements[step][i].Add(elements[i][j]);
+                buffer_elements.Add(new List<List<double>>());
+                for (int i = 0; i < elements.Count; i++)
+                {
+                    buffer_elements[step].Add(new List<double>());
+                    for (int j = 0; j < elements[0].Count; j++)
+                        buffer_elements[step][i].Add(elements[i][j]);
+                }
+            }
+            else
+            {
+                buffer_fractions.Add(new List<List<ordinary_fraction>>());
+                for (int i = 0; i < fractions.Count; i++)
+                {
+                    buffer_fractions[step].Add(new List<ordinary_fraction>());
+                    for (int j = 0; j < fractions[0].Count; j++)
+                        buffer_fractions[step][i].Add(fractions[i][j]);
+                }
             }
         }
 
@@ -371,8 +388,12 @@ namespace simplex_method
                         buffer_variable_visualization = new int[variable_visualization.Length];
                         for (int i = 0; i < variable_visualization.Length; i++)
                             buffer_variable_visualization[i] = variable_visualization[i];
-                        //прямой ход Гаусса
-                        MatrixTransformation.Gauss(elements, CornerDot, variable_visualization);
+                        if (MainWindow.decimals_or_simple)
+                            //прямой ход Гаусса
+                            MatrixTransformation.Gauss(elements, CornerDot, variable_visualization);
+                        else
+                            //прямой ход Гаусса
+                            MatrixTransformation.Gauss(fractions, CornerDot, variable_visualization);
                     }
                     catch (Exception d)
                     {
@@ -389,8 +410,12 @@ namespace simplex_method
                 case 1:
                     //буферизация данных
                     BufferingTableValues();
-                    //Выражение базисных переменных.
-                    MatrixTransformation.HoistingMatrix(elements, number_of_permutations);
+                    if (MainWindow.decimals_or_simple)
+                        //Выражение базисных переменных.
+                        MatrixTransformation.HoistingMatrix(elements, number_of_permutations);
+                    else
+                        //Выражение базисных переменных.
+                        MatrixTransformation.HoistingMatrix(fractions, number_of_permutations);
                     //обновление таблицы
                     UpdateTableValues();
                     step++;

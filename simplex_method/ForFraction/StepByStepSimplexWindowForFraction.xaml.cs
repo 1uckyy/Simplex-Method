@@ -25,6 +25,10 @@ namespace simplex_method
         /// </summary>
         List<List<ordinary_fraction>> fractions = new List<List<ordinary_fraction>>();
         /// <summary>
+        /// Буфер для матрицы коэффициентов (обыкновенных дробей) системы ограничений-равенств.
+        /// </summary>
+        List<List<List<ordinary_fraction>>> buffer_fractions = new List<List<List<ordinary_fraction>>>();
+        /// <summary>
         /// Коэффициенты (обыкновенных дробей целевой функции.
         /// </summary>
         ordinary_fraction[] target_function_fractions;

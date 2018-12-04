@@ -42,6 +42,12 @@
     <Compile Include="MatrixTransformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OrdinaryFractionLibrary\OrdinaryFractionLibrary.csproj">
+      <Project>{9a932714-8979-47ec-9987-ea164dc425b1}</Project>
+      <Name>OrdinaryFractionLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
