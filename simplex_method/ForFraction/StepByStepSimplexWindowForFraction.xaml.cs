@@ -28,10 +28,6 @@ namespace simplex_method
         /// Коэффициенты (обыкновенных дробей целевой функции.
         /// </summary>
         ordinary_fraction[] target_function_fractions;
-        /// <summary>
-        /// Десятичные(true) или обыкновенные(false) дроби.
-        /// </summary>
-        bool decimals_or_simple = true;
 
         /// <summary>
         /// Конструктор для окна выполнения пошагового симплекс-метода.
@@ -65,8 +61,6 @@ namespace simplex_method
             this.CornerDot = CornerDot;
             //настройка количества строк и столбцов матрицы
             SimplexTable.SettingMatrix(selected_number_of_rows, selected_number_of_columns, gaussgrid);
-            //для обыкновенных дробей
-            decimals_or_simple = false;
             //отрисовка закруглённых скобок матрицы и вертикальной черты, отделяющей столбец свободных членов
             DrawExtendedMatrix();
             //добавляем лейблы с визуализацией переменных(по типу x1, x2, x3 и т.д.)

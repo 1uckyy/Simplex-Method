@@ -41,6 +41,7 @@ namespace simplex_method
         List<List<ordinary_fraction>> copy_fractions;
         int num_variable;
         public static TextBox textBoxDirectory = new TextBox();
+        public static bool decimals_or_simple;
 
         public MainWindow()
         {
@@ -342,6 +343,12 @@ namespace simplex_method
         {
             //try
             //{
+
+            //установка значения статического поля
+            if (radioButtonDecimals.IsChecked == true)
+                decimals_or_simple = true;
+            else
+                decimals_or_simple = false;
 
             //Добавление в массив в зависимости от вида дробей.
             if (radioButtonDecimals.IsChecked == true)

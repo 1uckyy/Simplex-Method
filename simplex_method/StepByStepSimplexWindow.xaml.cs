@@ -265,7 +265,7 @@ namespace simplex_method
                 for (int j = 0; j < gaussgrid.ColumnDefinitions.Count; j++)
                 {
                     Label variable = new Label();
-                    if (decimals_or_simple == true)
+                    if (MainWindow.decimals_or_simple)
                         variable.Content = elements[i - 1][j];
                     else
                         variable.Content = fractions[i - 1][j];

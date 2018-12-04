@@ -63,20 +63,29 @@ namespace OrdinaryFractionLibrary
         /// </summary>
         public static ordinary_fraction operator /(ordinary_fraction of1, ordinary_fraction of2)//не обрабатывается деление на ноль
         {
+            //числитель
+            int top_new_number;
+            //знаменатель
+            int bottom_new_number;
+
+            //вычисления согласно оператору
+            top_new_number = of1.top_number * of2.bottom_number;
+            bottom_new_number = of1.bottom_number * of2.top_number;
+
             //конечный знак результата плюс
             sbyte sign=1;
             //если оба числа отрицательны, то теперь они положительны
             if (of1.top_number < 0 && of2.top_number < 0)
             {
                 //теперь они положительны
-                of1.top_number *= (-1);
-                of2.top_number *= (-1);
+                top_new_number *= (-1);
+                bottom_new_number *= (-1);
             }
             //если первое число отрицательно, а второе положительно
             else if(of1.top_number<0 && of2.top_number>0)
             {
                 //теперь первое число положительно(необходимо для вычисления)
-                of1.top_number *= (-1);
+                top_new_number *= (-1);
                 //конечный знак результата минус
                 sign = -1;
             }
@@ -84,14 +93,10 @@ namespace OrdinaryFractionLibrary
             else if (of1.top_number >= 0 && of2.top_number < 0)
             {
                 //теперь второе число положительно(необходимо для вычисления)
-                of2.top_number *= (-1);
+                bottom_new_number *= (-1);
                 //конечный знак результата минус
                 sign = -1;
             }
-
-            //вычисления согласно оператору
-            int top_new_number = of1.top_number * of2.bottom_number;
-            int bottom_new_number = of1.bottom_number * of2.top_number;
 
             //наибольший общий делить
             int nod = GreatestCommonDivisor(top_new_number, bottom_new_number);
@@ -108,19 +113,21 @@ namespace OrdinaryFractionLibrary
         /// </summary>
         public static ordinary_fraction operator *(ordinary_fraction of1, ordinary_fraction of2)
         {
+            //числитель
+            int top_new_number;
+            //знаменатель
+            int bottom_new_number;
+
+            //вычисления согласно оператору
+            top_new_number = of1.top_number * of2.top_number;
+            bottom_new_number = of1.bottom_number * of2.bottom_number;
+
             sbyte sign = 1;
-            //если оба числа отрицательны, то теперь они положительны
-            if (of1.top_number < 0 && of2.top_number < 0)
-            {
-                //теперь они положительны
-                of1.top_number *= (-1);
-                of2.top_number *= (-1);
-            }
             //если первое число отрицательно, а второе положительно
-            else if (of1.top_number < 0 && of2.top_number >= 0)
+            if (of1.top_number < 0 && of2.top_number >= 0)
             {
                 //теперь первое число положительно(необходимо для вычисления)
-                of1.top_number *= (-1);
+                top_new_number *= (-1);
                 //конечный знак результата минус
                 sign = -1;
             }
@@ -128,14 +135,10 @@ namespace OrdinaryFractionLibrary
             else if (of1.top_number >= 0 && of2.top_number < 0)
             {
                 //теперь второе число положительно(необходимо для вычисления)
-                of2.top_number *= (-1);
+                top_new_number *= (-1);
                 //конечный знак результата минус
                 sign = -1;
             }
-
-            //вычисления согласно оператору
-            int top_new_number = of1.top_number * of2.top_number;
-            int bottom_new_number = of1.bottom_number * of2.bottom_number;
 
             //наибольший общий делить
             int nod = GreatestCommonDivisor(top_new_number, bottom_new_number);
