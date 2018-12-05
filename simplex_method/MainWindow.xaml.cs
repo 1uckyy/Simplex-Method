@@ -13,7 +13,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using OrdinaryFractionLibrary;
-using System.Text.RegularExpressions;
 
 namespace simplex_method
 {
@@ -346,41 +345,6 @@ namespace simplex_method
         {
             try
             {
-                //для обыкновенных дробей дополнительная проверка
-                if (radioButtonDecimals.IsChecked == false)
-                {
-                    //шаблон
-                    string pattern = @"[0-9]+/[0-9]+";
-                    string pattern1 = @"[0-9]+,[0-9]+";
-                    //проверяем по шаблону
-                    for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
-                    {
-                        for (int j = 0; j < entergrid.ColumnDefinitions.Count; j++)
-                        {
-                            if (j % 2 == 0)
-                            {
-                                //находим textbox
-                                TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
-
-                                if (Regex.IsMatch(txt.Text, pattern1) == true)
-                                    throw new Exception("Десятичная дробь: " + txt.Text);
-
-                                //если это дробь, то обрабатываем её
-                                if (Regex.IsMatch(txt.Text, pattern) == true)
-                                {
-                                    string[] str = txt.Text.Split('/');
-                                    if (Int32.Parse(str[1]) == 0)
-                                    {
-                                        throw new Exception("Деление на ноль: " + txt.Text);
-                                    }
-                                    txt.Text = ((double)Int32.Parse(str[0]) / Int32.Parse(str[1])).ToString();
-                                    Regex.Replace(txt.Text, ",", ".");
-                                }
-                            }
-                        }
-                    }
-                }
-
                 //установка значения статического поля
                 if (radioButtonDecimals.IsChecked == true)
                     decimals_or_simple = true;
@@ -1770,46 +1734,92 @@ namespace simplex_method
 
         private void SaveFile_Click(object sender, RoutedEventArgs e)
         {
-            elements = new List<List<double>>();
-
-            //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
-            for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
+            if (radioButtonDecimals.IsChecked == true)
             {
-                elements.Add(new List<double>());
-                for (int j = 0; j < entergrid.ColumnDefinitions.Count; j++)
+                elements = new List<List<double>>();
+
+                //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
+                for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
                 {
-                    if (j % 2 == 0)
+                    elements.Add(new List<double>());
+                    for (int j = 0; j < entergrid.ColumnDefinitions.Count; j++)
                     {
-                        //находим textbox
-                        TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
-                        //добавляем в массив число
-                        elements[i].Add(Int32.Parse(txt.Text));
+                        if (j % 2 == 0)
+                        {
+                            //находим textbox
+                            TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
+                            //добавляем в массив число
+                            elements[i].Add(Int32.Parse(txt.Text));
+                        }
                     }
                 }
-            }
 
-            //массив для коэффициентов целевой функции
-            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
-            //заполняем массив коэффициентов целевой функции
-            FillArrayWithCoefOfGoalFunc(target_function_elements);
+                //массив для коэффициентов целевой функции
+                double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                //заполняем массив коэффициентов целевой функции
+                FillArrayWithCoefOfGoalFunc(target_function_elements);
 
-            double[] basix_vars = new double[Int32.Parse(dimension2.Text)];
-            int index = 0;
-            //перестановки в матрице и массиве визуализации
-            for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
-            {
-                if (j % 2 != 0)
+                double[] basix_vars = new double[Int32.Parse(dimension2.Text)];
+                int index = 0;
+                //перестановки в матрице и массиве визуализации
+                for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
                 {
-                    //находим textbox
-                    TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
-                    basix_vars[index] = double.Parse(txt.Text);
-                    index++;
+                    if (j % 2 != 0)
+                    {
+                        //находим textbox
+                        TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
+                        basix_vars[index] = double.Parse(txt.Text);
+                        index++;
+                    }
                 }
-            }
 
-            ChooseDirectory CD = new ChooseDirectory(Int32.Parse(dimension1.Text), Int32.Parse(dimension2.Text), target_function_elements, elements, basix_vars, comboBoxMinMax.SelectedIndex);
-            CD.Owner = this;
-            CD.ShowDialog();
+                ChooseDirectory CD = new ChooseDirectory(Int32.Parse(dimension1.Text), Int32.Parse(dimension2.Text), target_function_elements, elements, basix_vars, comboBoxMinMax.SelectedIndex, true);
+                CD.Owner = this;
+                CD.ShowDialog();
+            }
+            else
+            {
+                fractions = new List<List<ordinary_fraction>>();
+
+                //заполняем массив элементами(коэффициентами), введёнными в текстбоксы
+                for (int i = 0; i < entergrid.RowDefinitions.Count; i++)
+                {
+                    fractions.Add(new List<ordinary_fraction>());
+                    for (int j = 0; j < entergrid.ColumnDefinitions.Count; j++)
+                    {
+                        if (j % 2 == 0)
+                        {
+                            //находим textbox
+                            TextBox txt = (TextBox)entergrid.FindName("textBox" + i + "_" + j);
+                            //добавляем в массив число
+                            fractions[i].Add(txt.Text);
+                        }
+                    }
+                }
+
+                //массив для коэффициентов целевой функции
+                ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
+                //заполняем массив коэффициентов целевой функции
+                FillArrayWithCoefOfGoalFunc(target_function_elements);
+
+                double[] basix_vars = new double[Int32.Parse(dimension2.Text)];
+                int index = 0;
+                //перестановки в матрице и массиве визуализации
+                for (int j = 0; j < basix_variables.ColumnDefinitions.Count; j++)
+                {
+                    if (j % 2 != 0)
+                    {
+                        //находим textbox
+                        TextBox txt = (TextBox)entergrid.FindName("textBox" + j);
+                        basix_vars[index] = double.Parse(txt.Text);
+                        index++;
+                    }
+                }
+
+                ChooseDirectory CD = new ChooseDirectory(Int32.Parse(dimension1.Text), Int32.Parse(dimension2.Text), target_function_elements, fractions, basix_vars, comboBoxMinMax.SelectedIndex, false);
+                CD.Owner = this;
+                CD.ShowDialog();
+            }
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)

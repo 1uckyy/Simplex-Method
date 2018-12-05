@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using System.Threading.Tasks;
+using OrdinaryFractionLibrary;
 
 namespace simplex_method
 {
@@ -54,6 +55,17 @@ namespace simplex_method
         int MinMax;
 
         /// <summary>
+        /// Коэффициенты (обык.дроби) целевой функции.
+        /// </summary>
+        ordinary_fraction[] target_function_fractions;
+        /// <summary>
+        /// Коэффициенты (обык.дроби) системы ограничений-равенств.
+        /// </summary>
+        List<List<ordinary_fraction>> fractions;
+
+        bool? decimals_or_simple;
+
+        /// <summary>
         /// Конструктор окна с выбором файла.
         /// </summary>
         public ChooseDirectory()
@@ -89,7 +101,7 @@ namespace simplex_method
         /// <param name="elements">Коэффициенты системы ограничений-равенств.</param>
         /// <param name="basix_vars">Базисные переменные.</param>
         /// <param name="MinMax">Ищется минимум или максимум.(0-min,1-max).</param>
-        public ChooseDirectory(int number_of_restrictions, int number_of_variables, double[] target_function_elements, List<List<double>> elements, double[] basix_vars, int MinMax)
+        public ChooseDirectory(int number_of_restrictions, int number_of_variables, double[] target_function_elements, List<List<double>> elements, double[] basix_vars, int MinMax, bool? decimals_or_simple)
         {
             //инициализация окна
             InitializeComponent();
@@ -105,6 +117,74 @@ namespace simplex_method
             this.basix_vars = basix_vars;
             //Ищется минимум или максимум.(0-min,1-max).
             this.MinMax = MinMax;
+            this.decimals_or_simple = decimals_or_simple;
+
+
+            //получаем массив дисков, которые есть на компьютере
+            DriveInfo[] drives = DriveInfo.GetDrives();
+
+            //добавляем все диски в листбокс
+            foreach (DriveInfo drive in drives)
+            {
+                listBoxDirectories.Items.Add(drive.Name);
+            }
+
+            //Меняем название окна на "Выберите диск..."
+            this.Title = "Выберите диск...";
+
+            //кнопка возврата в предыдущюю папку по началу(при выборе диска) недоступна
+            buttonBac.IsEnabled = false;
+
+            //удаляем событие показа файлов формата .txt
+            ShowFiles.Click -= new RoutedEventHandler(ShowFiles_Click);
+            //добавляем событие сохранения файла
+            ShowFiles.Click += new RoutedEventHandler(ShowFiles_Click_2);
+
+            //удаляем событие показа окна помощи по открытию файла
+            help.Click -= new RoutedEventHandler(MenuItem_Click);
+            //добавляем событие показа окна помощи по сохранению файла
+            help.Click += new RoutedEventHandler(MenuItem_Click_2);
+
+            //меняем картинку menuitem
+            ImageShowFiles.Source = new BitmapImage(new Uri(@"save.ico", UriKind.RelativeOrAbsolute));
+            //меняем текст menuitem
+            ShowFiles.Header = "Сохранить";
+
+            //label "Имя файла:" теперь виден
+            labelFileName.Visibility = Visibility.Visible;
+            //поле ввода для имени файла теперь видно
+            textBoxFileName.Visibility = Visibility.Visible;
+
+            //увеличиваем высоту окна
+            this.Height = 380;
+        }
+
+        /// <summary>
+        /// Конструктор окна с сохранением файла.
+        /// </summary>
+        /// <param name="number_of_restrictions">Количество ограничений.</param>
+        /// <param name="number_of_variables">Количество переменных.</param>
+        /// <param name="target_function_elements">Коэффициенты целевой функции.</param>
+        /// <param name="elements">Коэффициенты системы ограничений-равенств.</param>
+        /// <param name="basix_vars">Базисные переменные.</param>
+        /// <param name="MinMax">Ищется минимум или максимум.(0-min,1-max).</param>
+        public ChooseDirectory(int number_of_restrictions, int number_of_variables, ordinary_fraction[] target_function_elements, List<List<ordinary_fraction>> fractions, double[] basix_vars, int MinMax, bool? decimals_or_simple)
+        {
+            //инициализация окна
+            InitializeComponent();
+            //Количество ограничений.
+            this.number_of_restrictions = number_of_restrictions;
+            //Количество переменных.
+            this.number_of_variables = number_of_variables;
+            //Коэффициенты целевой функции.
+            this.target_function_fractions = target_function_elements;
+            //Коэффициенты системы ограничений-равенств.
+            this.fractions = fractions;
+            //Базисные переменные.
+            this.basix_vars = basix_vars;
+            //Ищется минимум или максимум.(0-min,1-max).
+            this.MinMax = MinMax;
+            this.decimals_or_simple = decimals_or_simple;
 
 
             //получаем массив дисков, которые есть на компьютере
@@ -357,64 +437,129 @@ namespace simplex_method
         {
             try
             {
-                //директория для сохранения файла
-                string path_path = path + "\\" + textBoxFileName.Text;
-                FileInfo filesave = new FileInfo(path_path);
-
-                //создаём новый файл
-                using (FileStream fs = filesave.Create()) { }
-
-                //рабочая строка
-                string str = "";
-
-                //открываем поток для записи
-                using (StreamWriter sw = new StreamWriter(path_path, false, System.Text.Encoding.Default))
+                if (decimals_or_simple==true)
                 {
-                    //количество ограничений и количество переменных
-                    str = number_of_restrictions + " " + number_of_variables;
-                    //записываем
-                    sw.WriteLine(str);
+                    //директория для сохранения файла
+                    string path_path = path + "\\" + textBoxFileName.Text;
+                    FileInfo filesave = new FileInfo(path_path);
 
-                    str = "";
+                    //создаём новый файл
+                    using (FileStream fs = filesave.Create()) { }
 
-                    //элементы целевой функции
-                    for (int i = 0; i < target_function_elements.Length; i++)
+                    //рабочая строка
+                    string str = "";
+
+                    //открываем поток для записи
+                    using (StreamWriter sw = new StreamWriter(path_path, false, System.Text.Encoding.Default))
                     {
-                        str += target_function_elements[i].ToString() + " ";
-                    }
-                    //записываем
-                    sw.WriteLine(str);
+                        //количество ограничений и количество переменных
+                        str = number_of_restrictions + " " + number_of_variables;
+                        //записываем
+                        sw.WriteLine(str);
 
-                    //коэффициенты системы ограничений-равенств
-                    for (int i = 0; i < elements.Count; i++)
-                    {
                         str = "";
-                        for (int j = 0; j < elements[0].Count; j++)
+
+                        //элементы целевой функции
+                        for (int i = 0; i < target_function_elements.Length; i++)
                         {
-                            str += elements[i][j].ToString() + " ";
+                            str += target_function_elements[i].ToString() + " ";
+                        }
+                        //записываем
+                        sw.WriteLine(str);
+
+                        //коэффициенты системы ограничений-равенств
+                        for (int i = 0; i < elements.Count; i++)
+                        {
+                            str = "";
+                            for (int j = 0; j < elements[0].Count; j++)
+                            {
+                                str += elements[i][j].ToString() + " ";
+                            }
+                            //записываем строку коэффициентов
+                            sw.WriteLine(str);
+                        }
+
+                        str = "";
+
+                        //элементы начальной угловой точки
+                        for (int i = 0; i < basix_vars.Length; i++)
+                        {
+                            str += basix_vars[i].ToString() + " ";
                         }
                         //записываем строку коэффициентов
                         sw.WriteLine(str);
+
+                        //min или max
+                        if (MinMax == 0)
+                            str = "min";
+                        else str = "max";
+                        //записываем
+                        sw.WriteLine(str);
+
+                        MessageBox.Show("Сохранено!");
                     }
+                }
+                else
+                {
+                    //директория для сохранения файла
+                    string path_path = path + "\\" + textBoxFileName.Text;
+                    FileInfo filesave = new FileInfo(path_path);
 
-                    str = "";
+                    //создаём новый файл
+                    using (FileStream fs = filesave.Create()) { }
 
-                    //элементы начальной угловой точки
-                    for (int i = 0; i < basix_vars.Length; i++)
+                    //рабочая строка
+                    string str = "";
+
+                    //открываем поток для записи
+                    using (StreamWriter sw = new StreamWriter(path_path, false, System.Text.Encoding.Default))
                     {
-                        str += basix_vars[i].ToString() + " ";
+                        //количество ограничений и количество переменных
+                        str = number_of_restrictions + " " + number_of_variables;
+                        //записываем
+                        sw.WriteLine(str);
+
+                        str = "";
+
+                        //элементы целевой функции
+                        for (int i = 0; i < target_function_fractions.Length; i++)
+                        {
+                            str += target_function_fractions[i].ToString() + " ";
+                        }
+                        //записываем
+                        sw.WriteLine(str);
+
+                        //коэффициенты системы ограничений-равенств
+                        for (int i = 0; i < fractions.Count; i++)
+                        {
+                            str = "";
+                            for (int j = 0; j < fractions[0].Count; j++)
+                            {
+                                str += fractions[i][j].ToString() + " ";
+                            }
+                            //записываем строку коэффициентов
+                            sw.WriteLine(str);
+                        }
+
+                        str = "";
+
+                        //элементы начальной угловой точки
+                        for (int i = 0; i < basix_vars.Length; i++)
+                        {
+                            str += basix_vars[i].ToString() + " ";
+                        }
+                        //записываем строку коэффициентов
+                        sw.WriteLine(str);
+
+                        //min или max
+                        if (MinMax == 0)
+                            str = "min";
+                        else str = "max";
+                        //записываем
+                        sw.WriteLine(str);
+
+                        MessageBox.Show("Сохранено!");
                     }
-                    //записываем строку коэффициентов
-                    sw.WriteLine(str);
-
-                    //min или max
-                    if (MinMax == 0)
-                        str = "min";
-                    else str = "max";
-                    //записываем
-                    sw.WriteLine(str);
-
-                    MessageBox.Show("Сохранено!");
                 }
             }
             catch(ArgumentException)

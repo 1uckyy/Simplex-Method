@@ -1075,7 +1075,7 @@ namespace simplex_method
 
                 //коэффициент в нижнем правом углу симплекс таблицы
                 a = "0";
-                for (int i = 0; i < elements.Count; i++)
+                for (int i = 0; i < fractions.Count; i++)
                     a += fractions[i][fractions[0].Count - 1] * target_function_fractions[variable_visualization[i] - 1];
                 //находим label
                 Label variable2 = (Label)simplextablegrid.FindName("simplexlabel" + (simplextablegrid.RowDefinitions.Count - 1) + "_" + (simplextablegrid.ColumnDefinitions.Count - 1));

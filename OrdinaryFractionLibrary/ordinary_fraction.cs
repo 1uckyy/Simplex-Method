@@ -41,6 +41,8 @@ namespace OrdinaryFractionLibrary
             //вспомогательный массив(определяем верхнее число и нижнее)
             string[] temp = str.Split('/');
 
+            if (temp.Length > 2)
+                throw new Exception("Входная строка имела неверный формат.");
             //если это дробное число
             if (temp.Length == 2)
             {
