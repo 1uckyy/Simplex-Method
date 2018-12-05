@@ -899,21 +899,21 @@ namespace simplex_method
                     //если число ограничений-равенств больше ранга матрицы
                     if ((dimension1.SelectedIndex + 1) > rang)
                     {
-                        //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+                        //тогда работаем с массивом copy_fractions, в котором уже удалены "ненужные" строки
 
                         //вспомогательный массив для дальнейшего отображения переменных
                         int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
                         //меняем местами столбцы для прямого хода метода Гаусса
-                        int count = ChangeColumnsForGauss(copy_elements, variable_visualization);
+                        int count = ChangeColumnsForGauss(copy_fractions, variable_visualization);
 
 
                         //массив для коэффициентов целевой функции
-                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_fractions, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
                         //открываем
                         AMST.Show();
                         //закрываем основной
@@ -925,15 +925,15 @@ namespace simplex_method
                         //вспомогательный массив для дальнейшего отображения переменных
                         int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
                         //меняем местами столбцы для прямого хода метода Гаусса
-                        int count = ChangeColumnsForGauss(elements, variable_visualization);
+                        int count = ChangeColumnsForGauss(fractions, variable_visualization);
 
                         //массив для коэффициентов целевой функции
-                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(fractions, checkBoxCornerDot.IsChecked, variable_visualization, count_basix_var, target_function_elements, comboBoxMinMax.SelectedIndex);
                         //открываем
                         AMST.Show();
                         //закрываем основной
@@ -946,7 +946,7 @@ namespace simplex_method
                     //если число ограничений-равенств больше ранга матрицы
                     if ((dimension1.SelectedIndex + 1) > rang)
                     {
-                        //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+                        //тогда работаем с массивом copy_fractions, в котором уже удалены "ненужные" строки
 
                         //вспомогательный массив для дальнейшего отображения переменных
                         int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
@@ -955,12 +955,12 @@ namespace simplex_method
                             variable_visualization[i] = i + 1;
 
                         //массив для коэффициентов целевой функции
-                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(copy_fractions, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
                         //открываем
                         AMST.Show();
                         //закрываем основной
@@ -976,12 +976,12 @@ namespace simplex_method
                             variable_visualization[i] = i + 1;
 
                         //массив для коэффициентов целевой функции
-                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна для автоматического режима
-                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(elements, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        AutoModeSimplexTable AMST = new AutoModeSimplexTable(fractions, checkBoxCornerDot.IsChecked, variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex);
                         //открываем
                         AMST.Show();
                         //закрываем основной

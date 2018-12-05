@@ -855,36 +855,75 @@ namespace simplex_method
             //координаты минимума в столбце
             int[] minimum = new int[2];
 
-            //ищем отрицательный элемент в последней строке
-            for (int j = 0; j < simplex_elements[0].Count - 1; j++)
+            if (MainWindow.decimals_or_simple)
             {
-                if (simplex_elements[/*simplextablegrid.RowDefinitions.Count - 2*/simplex_elements.Count - 1][j] < 0)
+                //ищем отрицательный элемент в последней строке
+                for (int j = 0; j < simplex_elements[0].Count - 1; j++)
                 {
-                    minimum[0] = -1;
-                    minimum[1] = -1;
-                    //ищем подходящий не отрицательный элемент в столбце
-                    for (int i = 0; i < /*simplextablegrid.RowDefinitions.Count - 1*/simplex_elements.Count - 1; i++)
+                    if (simplex_elements[/*simplextablegrid.RowDefinitions.Count - 2*/simplex_elements.Count - 1][j] < 0)
                     {
-                        if (simplex_elements[i][j] > 0)
+                        minimum[0] = -1;
+                        minimum[1] = -1;
+                        //ищем подходящий не отрицательный элемент в столбце
+                        for (int i = 0; i < /*simplextablegrid.RowDefinitions.Count - 1*/simplex_elements.Count - 1; i++)
                         {
-                            if ((minimum[0] == -1) && (minimum[1] == -1))
+                            if (simplex_elements[i][j] > 0)
                             {
-                                minimum[0] = i;
-                                minimum[1] = j;
-                            }
-                            else if ((simplex_elements[minimum[0]][simplex_elements[0].Count - 1] / simplex_elements[minimum[0]][minimum[1]]) > (simplex_elements[i][simplex_elements[0].Count - 1] / simplex_elements[i][j]))
-                            {
-                                minimum[0] = i;
-                                minimum[1] = j;
+                                if ((minimum[0] == -1) && (minimum[1] == -1))
+                                {
+                                    minimum[0] = i;
+                                    minimum[1] = j;
+                                }
+                                else if ((simplex_elements[minimum[0]][simplex_elements[0].Count - 1] / simplex_elements[minimum[0]][minimum[1]]) > (simplex_elements[i][simplex_elements[0].Count - 1] / simplex_elements[i][j]))
+                                {
+                                    minimum[0] = i;
+                                    minimum[1] = j;
+                                }
                             }
                         }
+                        //если есть минимальный элемент, то делаем его опорным
+                        if ((minimum[0] != -1) && (minimum[1] != -1))
+                        {
+                            row_of_the_support_element = minimum[0];
+                            column_of_the_support_element = minimum[1];
+                            break;
+                        }
                     }
-                    //если есть минимальный элемент, то делаем его опорным
-                    if ((minimum[0] != -1) && (minimum[1] != -1))
+                }
+            }
+            else
+            {
+                //ищем отрицательный элемент в последней строке
+                for (int j = 0; j < simplex_fractions[0].Count - 1; j++)
+                {
+                    if (simplex_fractions[simplex_fractions.Count - 1][j].value < 0)
                     {
-                        row_of_the_support_element = minimum[0];
-                        column_of_the_support_element = minimum[1];
-                        break;
+                        minimum[0] = -1;
+                        minimum[1] = -1;
+                        //ищем подходящий не отрицательный элемент в столбце
+                        for (int i = 0; i < simplex_fractions.Count - 1; i++)
+                        {
+                            if (simplex_fractions[i][j].value > 0)
+                            {
+                                if ((minimum[0] == -1) && (minimum[1] == -1))
+                                {
+                                    minimum[0] = i;
+                                    minimum[1] = j;
+                                }
+                                else if ((simplex_fractions[minimum[0]][simplex_fractions[0].Count - 1] / simplex_fractions[minimum[0]][minimum[1]]).value > (simplex_fractions[i][simplex_fractions[0].Count - 1] / simplex_fractions[i][j]).value)
+                                {
+                                    minimum[0] = i;
+                                    minimum[1] = j;
+                                }
+                            }
+                        }
+                        //если есть минимальный элемент, то делаем его опорным
+                        if ((minimum[0] != -1) && (minimum[1] != -1))
+                        {
+                            row_of_the_support_element = minimum[0];
+                            column_of_the_support_element = minimum[1];
+                            break;
+                        }
                     }
                 }
             }

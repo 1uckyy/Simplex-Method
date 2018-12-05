@@ -29,7 +29,7 @@ namespace simplex_method
         /// </summary>
         List<List<List<ordinary_fraction>>> buffer_fractions = new List<List<List<ordinary_fraction>>>();
         /// <summary>
-        /// Коэффициенты (обыкновенных дробей целевой функции.
+        /// Коэффициенты (обыкновенных дробей) целевой функции.
         /// </summary>
         ordinary_fraction[] target_function_fractions;
 
