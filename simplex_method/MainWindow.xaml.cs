@@ -338,7 +338,9 @@ namespace simplex_method
             }
         }
 
-        //кнопка "решить"
+        /// <summary>
+        /// Кнопка "решить".
+        /// </summary>
         private void button_Click(object sender, RoutedEventArgs e)
         {
             //try
@@ -798,15 +800,15 @@ namespace simplex_method
                         //вспомогательный массив для дальнейшего отображения переменных
                         int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
                         //меняем местами столбцы для прямого хода метода Гаусса
-                        int count = ChangeColumnsForGauss(elements, variable_visualization);
+                        int count = ChangeColumnsForGauss(fractions, variable_visualization);
 
                         //массив для коэффициентов целевой функции
-                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна
-                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(fractions, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, count, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
                         //открываем
                         SBSSW.Show();
                         //закрываем основной
@@ -822,7 +824,7 @@ namespace simplex_method
                         //если решаем продолжать
                         if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
-                            //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+                            //тогда работаем с массивом copy_fractions, в котором уже удалены "ненужные" строки
 
                             //вспомогательный массив для дальнейшего отображения переменных
                             int[] variable_visualization = new int[Int32.Parse(dimension2.Text)];
@@ -831,13 +833,13 @@ namespace simplex_method
                                 variable_visualization[i] = i + 1;
 
                             //массив для коэффициентов целевой функции
-                            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                            ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                             //заполняем массив коэффициентов целевой функции
                             FillArrayWithCoefOfGoalFunc(target_function_elements);
 
 
                             //создаём экземпляр окна
-                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_elements, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                            StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(copy_fractions, rang + 1, (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
                             //открываем
                             SBSSW.Show();
                             //закрываем основной
@@ -854,12 +856,12 @@ namespace simplex_method
                             variable_visualization[i] = i + 1;
 
                         //массив для коэффициентов целевой функции
-                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
                         //создаём экземпляр окна
-                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(elements, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
+                        StepByStepSimplexWindow SBSSW = new StepByStepSimplexWindow(fractions, (Int32.Parse(dimension1.SelectedIndex.ToString()) + 2), (Int32.Parse(dimension2.SelectedIndex.ToString()) + 2), variable_visualization, rang, target_function_elements, comboBoxMinMax.SelectedIndex, checkBoxCornerDot.IsChecked);
                         //открываем
                         SBSSW.Show();
                         //закрываем основной
