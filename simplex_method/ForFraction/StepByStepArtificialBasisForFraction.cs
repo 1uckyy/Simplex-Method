@@ -43,7 +43,6 @@ namespace simplex_method
             this.target_function_fractions = target_function_fractions;
             step = 1;
             step_1 = 0;
-            memory = false;
             simplex_table_was_draw = false;
             this.MinMax = MinMax;
 
