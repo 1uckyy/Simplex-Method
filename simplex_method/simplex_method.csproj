@@ -65,6 +65,7 @@
     <Compile Include="ChooseDirectory.xaml.cs">
       <DependentUpon>ChooseDirectory.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ForFraction\AutoModeArtificialBasisForFraction.cs" />
     <Compile Include="ForFraction\AutoModeSimplexTableForFraction.cs" />
     <Compile Include="ForFraction\StepByStepArtificialBasisForFraction.cs" />
     <Compile Include="ForFraction\StepByStepSimplexWindowForFraction.xaml.cs" />
