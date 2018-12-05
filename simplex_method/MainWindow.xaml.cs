@@ -343,11 +343,11 @@ namespace simplex_method
         /// </summary>
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
+            try
+            {
 
-            //установка значения статического поля
-            if (radioButtonDecimals.IsChecked == true)
+                //установка значения статического поля
+                if (radioButtonDecimals.IsChecked == true)
                 decimals_or_simple = true;
             else
                 decimals_or_simple = false;
@@ -997,7 +997,7 @@ namespace simplex_method
                         //если решаем продолжать
                         if (MessageBox.Show("Число ограничений-равенств (" + (dimension1.SelectedIndex + 1) + ") больше ранга матрицы (" + rang + "). Следовательно есть линейно зависимые строки. Убрать \"ненужные\" строки матрицы и продолжить?", "Вопрос!?!?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
-                            //тогда работаем с массивом copy_elements, в котором уже удалены "ненужные" строки
+                            //тогда работаем с массивом copy_fractions, в котором уже удалены "ненужные" строки
 
                             //вспомогательный массив для дальнейшего отображения переменных
                             int[] variable_visualization = new int[Int32.Parse(dimension2.Text) + rang];
@@ -1008,13 +1008,13 @@ namespace simplex_method
                                 variable_visualization[i] = i - rang + 1;
 
                             //массив для коэффициентов целевой функции
-                            double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                            ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                             //заполняем массив коэффициентов целевой функции
                             FillArrayWithCoefOfGoalFunc(target_function_elements);
 
 
                             //создаём экземпляр окна
-                            StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(copy_elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                            StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(copy_fractions, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
                             //открываем
                             SBABW.Show();
                             //закрываем основной
@@ -1032,11 +1032,11 @@ namespace simplex_method
                             variable_visualization[i] = i - rang + 1;
 
                         //массив для коэффициентов целевой функции
-                        double[] target_function_elements = new double[Int32.Parse(dimension2.Text)];
+                        ordinary_fraction[] target_function_elements = new ordinary_fraction[Int32.Parse(dimension2.Text)];
                         //заполняем массив коэффициентов целевой функции
                         FillArrayWithCoefOfGoalFunc(target_function_elements);
 
-                        StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(elements, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
+                        StepByStepArtificialBasisWindow SBABW = new StepByStepArtificialBasisWindow(fractions, rang, variable_visualization, target_function_elements, comboBoxMinMax.SelectedIndex);
                         SBABW.Show();
                         this.Close();
                     }
@@ -1097,11 +1097,11 @@ namespace simplex_method
                     }
                 }
             }
-            //}
-            //catch (Exception d)
-            //{
-            //    MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //}
+            }
+            catch (Exception d)
+            {
+                MessageBox.Show(d.Message, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         /// <summary>

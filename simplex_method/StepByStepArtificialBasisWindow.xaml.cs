@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using OrdinaryFractionLibrary;
 
 namespace simplex_method
 {
@@ -102,28 +103,57 @@ namespace simplex_method
         /// </summary>
         private void Implementation()
         {
-            //создаём сиплекс-таблицу
-            simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, false);
-            MainGrid.Children.Add(simplextable);
-            //добавляем тильду
-            simplextable.AddTilde();
-            if (simplextable.ResponseCheck() == 1)
+            if (MainWindow.decimals_or_simple)
             {
-                //type_of_step.Add(false);
-                first = false;
-                labelsteps.Content = "Холостой шаг: Метод искусственного базиса. Выбор опорного элемента.";
-                //холостой шаг
-                simplextable.IdleStep();
-                this.Width = 720;
+                //создаём сиплекс-таблицу
+                simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, elements, target_function_elements, false);
+                MainGrid.Children.Add(simplextable);
+                //добавляем тильду
+                simplextable.AddTilde();
+                if (simplextable.ResponseCheck() == 1)
+                {
+                    //type_of_step.Add(false);
+                    first = false;
+                    labelsteps.Content = "Холостой шаг: Метод искусственного базиса. Выбор опорного элемента.";
+                    //холостой шаг
+                    simplextable.IdleStep();
+                    this.Width = 720;
+                }
+                else
+                {
+                    //type_of_step.Add(true);
+                    first = true;
+                    labelsteps.Content = "Шаг " + step + ": Метод искусственного базиса. Выбор опорного элемента.";
+                    //выбор опорного
+                    simplextable.SelectionOfTheSupportElement();
+                    this.Width = 651;
+                }
             }
             else
             {
-                //type_of_step.Add(true);
-                first = true;
-                labelsteps.Content = "Шаг " + step + ": Метод искусственного базиса. Выбор опорного элемента.";
-                //выбор опорного
-                simplextable.SelectionOfTheSupportElement();
-                this.Width = 651;
+                //создаём сиплекс-таблицу
+                simplextable = new SimplexTable(number_of_basix, number_of_free_variables, variable_visualization, fractions, target_function_fractions, false);
+                MainGrid.Children.Add(simplextable);
+                //добавляем тильду
+                simplextable.AddTilde();
+                if (simplextable.ResponseCheck() == 1)
+                {
+                    //type_of_step.Add(false);
+                    first = false;
+                    labelsteps.Content = "Холостой шаг: Метод искусственного базиса. Выбор опорного элемента.";
+                    //холостой шаг
+                    simplextable.IdleStep();
+                    this.Width = 720;
+                }
+                else
+                {
+                    //type_of_step.Add(true);
+                    first = true;
+                    labelsteps.Content = "Шаг " + step + ": Метод искусственного базиса. Выбор опорного элемента.";
+                    //выбор опорного
+                    simplextable.SelectionOfTheSupportElement();
+                    this.Width = 651;
+                }
             }
         }
 
@@ -170,48 +200,97 @@ namespace simplex_method
                 {
                     case true:
                         variable_visualization = simplextable.ReturnVariableVisualization();
-                        elements = simplextable.ReturnElements();
-                        elements.RemoveAt(elements.Count - 1);
-
-                        //организация массива для симплекс-метода
-                        List<List<double>> temp_elements = new List<List<double>>();
-                        for (int i = 0; i < number_of_basix; i++)
+                        if (MainWindow.decimals_or_simple)
                         {
-                            temp_elements.Add(new List<double>());
-                            for (int j = 0; j < number_of_basix; j++)
+                            elements = simplextable.ReturnElements();
+                            elements.RemoveAt(elements.Count - 1);
+
+                            //организация массива для симплекс-метода
+                            List<List<double>> temp_elements = new List<List<double>>();
+                            for (int i = 0; i < number_of_basix; i++)
                             {
-                                if (temp_elements[i].Count == i)
-                                    temp_elements[i].Add(1);
-                                else temp_elements[i].Add(0);
+                                temp_elements.Add(new List<double>());
+                                for (int j = 0; j < number_of_basix; j++)
+                                {
+                                    if (temp_elements[i].Count == i)
+                                        temp_elements[i].Add(1);
+                                    else temp_elements[i].Add(0);
+                                }
                             }
-                        }
-                        for (int i = 0; i < number_of_basix; i++)
-                        {
-                            temp_elements[i].AddRange(elements[i]);
-                        }
+                            for (int i = 0; i < number_of_basix; i++)
+                            {
+                                temp_elements[i].AddRange(elements[i]);
+                            }
 
-                        elements = temp_elements;
+                            elements = temp_elements;
 
-                        buttonBack.Visibility = Visibility.Hidden;
-                        buttonNext.Visibility = Visibility.Hidden;
-                        buttonBack1.Visibility = Visibility.Visible;
-                        buttonNext1.Visibility = Visibility.Visible;
-                        simplextable.HideSimplexTable();
-                        step++;
-                        if (simplex_table_was_draw == false)
-                        {
-                            simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, elements, target_function_elements, true);
-                            MainGrid.Children.Add(simplextable1);
-                            //Симплекс-таблица была создана
-                            simplex_table_was_draw = true;
+                            buttonBack.Visibility = Visibility.Hidden;
+                            buttonNext.Visibility = Visibility.Hidden;
+                            buttonBack1.Visibility = Visibility.Visible;
+                            buttonNext1.Visibility = Visibility.Visible;
+                            simplextable.HideSimplexTable();
+                            step++;
+                            if (simplex_table_was_draw == false)
+                            {
+                                simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, elements, target_function_elements, true);
+                                MainGrid.Children.Add(simplextable1);
+                                //Симплекс-таблица была создана
+                                simplex_table_was_draw = true;
+                            }
+                            else
+                            {
+                                simplextable1.DeleteButtons();
+                                MainGrid.Children.Add(simplextable1);
+                                simplextable1.SetVariableVisualization(simplextable.ReturnVariableVisualization());
+                                simplextable1.SetElements(elements);
+                                simplextable1.UpdateValuesNewStage();
+                            }
                         }
                         else
                         {
-                            simplextable1.DeleteButtons();
-                            MainGrid.Children.Add(simplextable1);
-                            simplextable1.SetVariableVisualization(simplextable.ReturnVariableVisualization());
-                            simplextable1.SetElements(elements);
-                            simplextable1.UpdateValuesNewStage();
+                            fractions = simplextable.ReturnFractions();
+                            fractions.RemoveAt(fractions.Count - 1);
+
+                            //организация массива для симплекс-метода
+                            List<List<ordinary_fraction>> temp_elements = new List<List<ordinary_fraction>>();
+                            for (int i = 0; i < number_of_basix; i++)
+                            {
+                                temp_elements.Add(new List<ordinary_fraction>());
+                                for (int j = 0; j < number_of_basix; j++)
+                                {
+                                    if (temp_elements[i].Count == i)
+                                        temp_elements[i].Add("1");
+                                    else temp_elements[i].Add("0");
+                                }
+                            }
+                            for (int i = 0; i < number_of_basix; i++)
+                            {
+                                temp_elements[i].AddRange(fractions[i]);
+                            }
+
+                            fractions = temp_elements;
+
+                            buttonBack.Visibility = Visibility.Hidden;
+                            buttonNext.Visibility = Visibility.Hidden;
+                            buttonBack1.Visibility = Visibility.Visible;
+                            buttonNext1.Visibility = Visibility.Visible;
+                            simplextable.HideSimplexTable();
+                            step++;
+                            if (simplex_table_was_draw == false)
+                            {
+                                simplextable1 = new SimplexTable(number_of_basix, variable_visualization.Length - number_of_basix, variable_visualization, fractions, target_function_fractions, true);
+                                MainGrid.Children.Add(simplextable1);
+                                //Симплекс-таблица была создана
+                                simplex_table_was_draw = true;
+                            }
+                            else
+                            {
+                                simplextable1.DeleteButtons();
+                                MainGrid.Children.Add(simplextable1);
+                                simplextable1.SetVariableVisualization(simplextable.ReturnVariableVisualization());
+                                simplextable1.SetElements(fractions);
+                                simplextable1.UpdateValuesNewStage();
+                            }
                         }
                         //проверка решения
                         switch (simplextable1.ResponseCheck())
